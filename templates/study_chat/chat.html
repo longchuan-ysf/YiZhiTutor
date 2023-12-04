@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/study_chat/chat.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="chat-body">
+    <div class="chat-content">
+        {% include "study_chat/chatinfo.html" %}
+    </div>
+    <hr>
+    <div class="chat-tolbar-container">
+        <i class="layui-icon layui-icon-picture-fine chat-toolbar-icon"></i>
+        <i class="layui-icon layui-icon-voice chat-toolbar-icon"></i>
+    </div>
+
+    <form class="layui-form" action="/chat/submit" method="post">
+        <div class="chat-toolbar-chatmain">
+            <div class="message-input-container">
+                 <div class="layui-form-item layui-form-text chat-form-text">
+                    <textarea id="chat-text" name="chat-text" rows="4" autofocus="true" class="text-edit"></textarea>
+                </div>
+                <div class="layui-form-item chat-form-submit" >
+                    <i class="layui-icon layui-icon-release" lay-submit="" lay-filter="demo1"
+                       type="submit" style="font-size: 30px; color: #1E9FFF;"></i>
+                    <div>test</div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!-- 继承layout.html模板 -->
+{% extends "public/layout.html" %}
+{% block content %}
+    <style type="text/css">
+        .layui-form-label {
+            float: left;
+            display: block;
+            padding: 9px 15px;
+            padding-top: 9px;
+            padding-bottom: 9px;
+            width: 120px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: right;
+        }
+        .layui-input-block {
+            margin-left: 150px;
+            min-height: 36px;
+        }
+    </style>
+    <!-- 引入全局自定义组件 -->
+    {% load radio checkbox select date image album editor format submit %}
+    <div class="layui-tab layui-tab-brief" style="width: 100%;">
+        <ul class="layui-tab-title">
+            {% for val in configList %}
+            <li {% if config_id == val.id %}class="layui-this"{% endif %}><a href="/configweb/index?config_id={{val.id}}">{{val.name}}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        <div class="layui-tab-content">
+            <form class="layui-form model-form" action="/configweb/index">
+                <input name="config_id" type="hidden" value="{{config_id}}">
+            {% for val in dataList %}
+                {% if val.type == "hidden" %}
+                <!-- 隐藏域 -->
+                <input name="{{val.code}}" id="{{val.code}}" type="hidden" value="{{val.value}}">
+                {% else %}
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{{val.title}}：</label>
+                    {% if val.type == "text" %}
+                    <!-- 单行文本 -->
+                    <div class="layui-input-block">
+                        <input name="{{val.code}}" value="{{val.value}}" lay-verify="required" autocomplete="off"
+                               placeholder="请输入{{val.title}}" class="layui-input" type="text">
+                    </div>
+                    {% elif val.type == "number" %}
+                    <!-- 数字文本 -->
+                    <div class="layui-input-block">
+                        <input name="{{val.code}}" value="{{val.value}}" lay-verify="required|number"
+                               autocomplete="off" placeholder="请输入{{val.title}}" class="layui-input" type="text">
+                    </div>
+                    {% elif val.type == "textarea" %}
+                    <!-- 多行文本 -->
+                    <div class="layui-input-block">
+                        <textarea name="{{val.code}}" placeholder="请输入{{val.title}}" class="layui-textarea">{{val.value}}</textarea>
+                    </div>
+                    {% elif val.type == "password" %}
+                    <div class="layui-input-block">
+                        <!-- 密码 -->
+                        <input name="{{val.code}}" value="{{val.value}}" placeholder="请输入{{val.title}}"
+                               autocomplete="off" class="layui-input" type="password">
+                    </div>
+                    {% elif val.type == "radio" %}
+                    <!-- 单选框 -->
+                    <div class="layui-input-block">
+                    {% with "{0}|name|id"|format:val.code as str %}
+                        {% radio str val.itemList val.value %}
+                    {% endwith %}
+                    </div>
+                    {% elif val.type == "checkbox" %}
+                    <!-- 复选框 -->
+                    <div class="layui-input-block">
+                    {% with "{0}__checkbox|name|id"|format:val.code as str %}
+                        {% checkbox str val.itemList val.value %}
+                    {% endwith %}
+                    </div>
+                    {% elif val.type == "select" %}
+                    <!-- 下拉框 -->
+                    <div class="layui-input-block">
+                    {% with "{0}|1|{1}|name|id"|format:val.code|format:val.title as str %}
+                        {% select str val.itemList val.value %}
+                    {% endwith %}
+                    </div>
+                    {% elif val.type == "date" %}
+                    <!-- 日期 -->
+                    <div class="layui-input-block">
+                    {% with "{0}|1|{1}|date"|format:val.code|format:val.title as str %}
+                        {% date str val.value %}
+                    {% endwith %}
+                    </div>
+                    {% elif val.type == "datetime" %}
+                    <!-- 时间 -->
+                    <div class="layui-input-block">
+                    {% with "{0}|1|{1}|datetime"|format:val.code|format:val.title as str %}
+                        {% date str val.value %}
+                    {% endwith %}
+                    </div>
+                    {% elif val.type == "image" %}
+                        <!-- 单图 -->
+                    {% with "{0}__image|{1}|90x90|建议上传尺寸450x450|450x450"|format:val.code|format:val.title as str %}
+                        {% image str val.value "" 0 %}
+                    {% endwith %}
+                    {% elif val.type == "images" %}
+                    <!-- 多图 -->
+                    <div class="layui-input-block">
+                    {% with "{0}__imgs|{1}|90x90|20|建议上传尺寸450x450|450x450"|format:val.code|format:val.title as str %}
+                        {% album str val.value "jpg,png,gif" 0 %}
+                    {% endwith %}
+                    </div>
+                    {% elif val.type == "file" %}
+                    <!-- 单文件上传 -->
+                    {% elif val.type == "files" %}
+                    <!-- 多文件上传 -->
+                    {% elif val.type == "ueditor" %}
+                    <!-- 富文本编辑器 -->
+                    <div class="layui-input-block" style="width:665px;">
+                        <textarea name="{{val.code}}__ueditor" id="{{val.code}}__ueditor" lay-verify="required"
+                                  class="layui-textarea">{{val.value}}</textarea>
+                    {% with "{0}__ueditor"|format:val.code as str %}
+                        {% editor str "default" "80%" 300 %}
+                    {% endwith %}
+                    </div>
+                    {% elif val.type == "json" %}
+                    <!-- JSON -->
+                    {% endif %}
+                </div>
+                {% endif %}
+            {% endfor %}
+                {% submit "submit|立即保存,close|关闭" 1 "submitForm2" %}
+            </form>
+        </div>
+    </div>
+{% endblock %}

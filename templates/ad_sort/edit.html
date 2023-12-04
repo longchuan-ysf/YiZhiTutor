@@ -1,0 +1,48 @@
+<!-- 继承form.html模板 -->
+{% extends "public/form.html" %}
+{% block content %}
+    <!-- 引入全局自定义组件 -->
+    {% load select item submit%}
+    <form class="layui-form model-form" action="">
+        <input name="id" id="id" type="hidden" value="{{data.id}}">
+        <div class="layui-form-item" style="width:665px;">
+            <label class="layui-form-label">位置名称：</label>
+            <div class="layui-input-block" style="width:515px;">
+                <input name="name" value="{{data.name}}" lay-verify="required" autocomplete="off" placeholder="请输入广告位名称" class="layui-input" type="text">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">广告位置：</label>
+                <div class="layui-input-inline">
+                    <input name="loc_id" value="{{data.loc_id}}" lay-verify="required" autocomplete="off" placeholder="请输入广告位置" class="layui-input" type="text">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">投放平台：</label>
+                <div class="layui-input-inline">
+                    {% select "platform|1|投放平台|name|id" platformList data.platform %}
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">位置描述：</label>
+            <div class="layui-input-block" style="width:515px;">
+                <input name="description" value="{{data.description}}" lay-verify="required" autocomplete="off" placeholder="请输入广告位描述" class="layui-input" type="text">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">投放栏目：</label>
+            {% item data.item_id data.cate_id 2 %}
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">序号：</label>
+                <div class="layui-input-inline">
+                    <input name="sort" value="{{data.sort}}" lay-verify="required|number" autocomplete="off" placeholder="请输入序号" class="layui-input" type="text">
+                </div>
+            </div>
+        </div>
+        {% submit "submit|立即保存,close|关闭" 1 "" %}
+    </form>
+{% endblock %}

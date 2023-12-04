@@ -1,0 +1,87 @@
+<!-- 继承form.html模板 -->
+{% extends "public/form.html" %}
+{% block content %}
+    <!-- 引入全局自定义组件 -->
+    {% load switch icon select transfer submit %}
+    <form class="layui-form model-form" action="">
+        <input name="id" id="id" type="hidden" value="{{data.id}}">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">菜单名称：</label>
+                <div class="layui-input-inline">
+                    <input name="name" value="{{data.name}}" lay-verify="required" autocomplete="off" placeholder="请输入菜单名称" class="layui-input" type="text">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">上级菜单：</label>
+                <div class="layui-input-inline">
+                    {% select "pid|0|上级菜单|name|id" menuList data.pid %}
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">URL地址：</label>
+                <div class="layui-input-inline">
+                    <input name="url" value="{{data.url}}" autocomplete="off" placeholder="请输入URL地址" class="layui-input" type="text">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">打开方式：</label>
+                <div class="layui-input-inline">
+                    {% select "target|1|打开方式|name|id" "1=内部打开,2=外部打开" data.target %}
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">菜单类型：</label>
+                <div class="layui-input-inline">
+                    {% select "type|1|菜单类型|name|id" typeList data.type %}
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">权限标识：</label>
+                <div class="layui-input-inline">
+                    <input name="permission" value="{{data.permission}}" autocomplete="off" placeholder="请输入权限标识" class="layui-input" type="text">
+                </div>
+            </div>
+
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">是否显示：</label>
+                <div class="layui-input-inline">
+                    {% switch "status" "显示|隐藏" data.status|default:1 %}
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">菜单图标：</label>
+                <div class="layui-input-inline">
+                    {% icon "icon" data.icon|default:"layui-icon-component" %}
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">序号：</label>
+                <div class="layui-input-inline">
+                    <input name="sort" value="{{data.sort}}" lay-verify="required|number" autocomplete="off" placeholder="请输入序号" class="layui-input" type="text">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item func layui-hide">
+            <label class="layui-form-label">权限节点：</label>
+            <div class="layui-input-block">
+                {% transfer "func|0|全部节点,已赋予节点|name|id|220x350" "1=列表,5=添加,10=修改,15=删除,20=详情,25=状态,30=批量删除,35=添加子级,40=全部展开,45=全部折叠,50=导出数据,55=导入数据,60=分配权限,65=重置密码" funcList %}
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text" style="width:665px;">
+            <label class="layui-form-label">备注：</label>
+            <div class="layui-input-block">
+                <textarea name="note" placeholder="请输入备注" class="layui-textarea">{{data.note}}</textarea>
+            </div>
+        </div>
+        {% submit "submit|立即保存,close|关闭" 1 "submitForm2" %}
+    </form>
+{% endblock %}

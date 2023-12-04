@@ -1,0 +1,57 @@
+.chat-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* 初始化为父容器的100% */
+    overflow: hidden;
+}
+
+.chat-content {
+    flex-grow: 1; /* 默认情况下占据所有剩余空间 */
+    overflow-y: auto;
+}
+
+.chat-tolbar-container {
+    display: flex;
+    align-items: center; /* 垂直居中图标 */
+}
+
+.chat-toolbar-icon {
+    /* 初始大小，稍后会用JS调整 */
+    font-size: 16px;
+}
+
+.chat-toolbar-chatmain {
+    /* 默认高度 */
+    height: 100px;
+}
+
+.message-input-container {
+    display: flex;
+    align-items: center;
+    height: 60%; /* 占chat-toolbar-chatmain高度的60% */
+    border: 1px solid #6d737b;
+    border-radius: 20px;
+}
+.text-edit {
+    width: 100%;
+    height: 70%;
+    margin: 0px;
+    padding: 2px;
+    resize: none;
+    outline: none;
+    border: none;
+}
+.chat-form-text{
+    width: 90%;
+    margin: 0;
+    padding: 14px;
+
+}
+.chat-form-submit{
+    width: 10%;
+    display: flex; /* 也使用Flex布局以便居中图标 */
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+    margin: 0;
+}
+

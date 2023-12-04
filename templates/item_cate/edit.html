@@ -1,0 +1,71 @@
+<!-- 继承form.html模板 -->
+{% extends "public/form.html" %}
+{% block content %}
+    <!-- 引入全局自定义组件 -->
+    {% load switch select image submit %}
+    <form class="layui-form model-form" action="">
+        <input name="id" id="id" type="hidden" value="{{data.id}}">
+        <input name="pid" id="pid" type="hidden" value="{{data.pid|default:0}}">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">栏目名称：</label>
+                <div class="layui-input-inline">
+                    <input name="name" value="{{data.name}}" lay-verify="required" autocomplete="off" placeholder="请输入栏目名称" class="layui-input pinyin" type="text">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">所属站点：</label>
+                <div class="layui-input-inline">
+                    {% select "item_id|1|所属站点|name|id" itemList data.item_id %}
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">栏目拼音：</label>
+                <div class="layui-input-inline">
+                    <input name="pinyin" value="{{data.pinyin}}" lay-verify="required" autocomplete="off" placeholder="请输入栏目拼音" class="layui-input" type="text">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">栏目简拼：</label>
+                <div class="layui-input-inline">
+                    <input name="code" value="{{data.code}}" lay-verify="required" autocomplete="off" placeholder="请输入栏目简拼" class="layui-input" type="text">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">序号：</label>
+                <div class="layui-input-inline">
+                    <input name="sort" value="{{data.sort}}" lay-verify="required|number" autocomplete="off" placeholder="请输入序号" class="layui-input" type="text">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">有无封面：</label>
+                <div class="layui-input-inline">
+                    {% switch "is_cover" "有封面|无封面" data.is_cover|default:1 "cover" %}
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">栏目状态：</label>
+                <div class="layui-input-inline">
+                    {% switch "status" "在用|停用" data.status|default:1 %}
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item {% if is_cover == 1 %} layui-hide{% endif %} cover">
+            <label class="layui-form-label">栏目封面：</label>
+            {% image "cover|封面|90x90|建议上传尺寸450x450" data.cover "" 0 %}
+        </div>
+        <div class="layui-form-item layui-form-text" style="width:665px;">
+            <label class="layui-form-label">备注：</label>
+            <div class="layui-input-block">
+                <textarea name="note" placeholder="请输入备注" class="layui-textarea">{{data.note}}</textarea>
+            </div>
+        </div>
+        {% submit "submit|立即保存,close|关闭" 1 "" %}
+    </form>
+{% endblock %}

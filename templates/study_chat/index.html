@@ -1,0 +1,24 @@
+<!-- 继承layout.html模板 -->
+{% extends "public/layout.html" %}
+{% block content %}
+    <div style="height: 700px">
+        <div class="layui-row layui-col-space5" style="height: 100%">
+            {#   消息对话主题     #}
+            <div class="layui-col-md3 layui-col-xs3 layui-col-sm3 layui-col-lg3"
+                 style="height: 100%;">
+                {% include "study_chat/themmatic.html" %}
+            </div>
+
+            {#   消息对话主体     #}
+            <div class="layui-col-md6 layui-col-xs6 layui-col-sm6 layui-col-lg6" style="height: 100%">
+                {% include "study_chat/chat.html" %}
+            </div>
+
+            {#   重点难点提示     #}
+            <div class="layui-col-md3 layui-col-xs3 layui-col-sm3 layui-col-lg3" style="height: 100%">
+                {% include "study_chat/tips.html" %}
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

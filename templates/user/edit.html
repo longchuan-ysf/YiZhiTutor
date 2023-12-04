@@ -1,0 +1,128 @@
+<!-- 继承form.html模板 -->
+{% extends "public/form.html" %}
+{% block content %}
+    <!-- 引入全局自定义组件 -->
+    {% load switch date select checkbox image city submit %}
+    <form class="layui-form model-form" action="">
+        <input name="id" id="id" type="hidden" value="{{data.id}}">
+        <div class="layui-form-item">
+            <label class="layui-form-label">头像：</label>
+            {% image "avatar|头像|90x90|建议上传尺寸450x450|450x450" data.avatar "" 0 %}
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">真实姓名：</label>
+                <div class="layui-input-inline">
+                    <input name="realname" value="{{data.realname}}" lay-verify="required" autocomplete="off" placeholder="请输入真实姓名" class="layui-input" type="text">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">性别：</label>
+                <div class="layui-input-inline">
+                    {% select "gender|1|性别|name|id" "1=男,2=女,3=保密" data.gender %}
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">用户昵称：</label>
+                <div class="layui-input-inline">
+                    <input name="nickname" value="{{data.nickname}}" lay-verify="required" autocomplete="off" placeholder="请输入人员昵称" class="layui-input" type="text">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">所属部门：</label>
+                <div class="layui-input-inline">
+                    {% select "dept_id|1|所属部门|name|id" deptList data.dept_id %}
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">手机号码：</label>
+                <div class="layui-input-inline">
+                    <input name="mobile" value="{{data.mobile}}" lay-verify="required|phone" placeholder="请输入手机号码" autocomplete="off" class="layui-input" type="tel">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">电子邮箱：</label>
+                <div class="layui-input-inline">
+                    <input name="email" value="{{data.email}}" lay-verify="required|email" placeholder="请输入邮箱" autocomplete="off" class="layui-input" type="text">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">职级：</label>
+                <div class="layui-input-inline">
+                    {% select "level_id|1|职级|name|id" levelList data.level_id %}
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">岗位：</label>
+                <div class="layui-input-inline">
+                    {% select "position_id|1|岗位|name|id" positionList data.position_id %}
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">出生日期：</label>
+                <div class="layui-input-inline">
+                    {% date "birthday|1|出生日期|date" data.birthday  %}
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">状态：</label>
+                <div class="layui-input-inline">
+                    {% switch "status" "在用|禁用" data.status|default:1 %}
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">用户名：</label>
+                <div class="layui-input-inline">
+                    <input name="username" value="{{data.username}}" lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input" type="text">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">密码：</label>
+                <div class="layui-input-inline">
+                    <input name="password" placeholder="请输入密码" autocomplete="off" class="layui-input" type="password">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">所属城市：</label>
+            {% city data.district_code 3 1 %}
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">详细地址：</label>
+                <div class="layui-input-inline">
+                    <input name="address" value="{{data.address}}" lay-verify="" autocomplete="off" placeholder="请输入详细地址" class="layui-input" type="text">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">排序号：</label>
+                <div class="layui-input-inline">
+                    <input name="sort" value="{{data.sort}}" lay-verify="required|number" autocomplete="off" placeholder="请输入序号" class="layui-input" type="text">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">所属角色：</label>
+            <div class="layui-input-block">
+                {% checkbox "roles|name|id" roleList data.roles %}
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text" style="width:625px;">
+            <label class="layui-form-label">备注：</label>
+            <div class="layui-input-block">
+                <textarea name="note" placeholder="请输入备注" class="layui-textarea">{{data.note}}</textarea>
+            </div>
+        </div>
+        {% submit "submit|立即保存,close|关闭" 1 "" %}
+    </form>
+{% endblock %}
