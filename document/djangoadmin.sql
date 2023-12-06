@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 本地数据库
+ Source Server         : localhost_3306
  Source Server Type    : MySQL
- Source Server Version : 100422
+ Source Server Version : 80030 (8.0.30)
  Source Host           : localhost:3306
- Source Schema         : djangoadmin.django.layui
+ Source Schema         : djangoadmin
 
  Target Server Type    : MySQL
- Target Server Version : 100422
+ Target Server Version : 80030 (8.0.30)
  File Encoding         : 65001
 
- Date: 05/02/2023 20:15:16
+ Date: 06/12/2023 09:46:04
 */
 
 SET NAMES utf8mb4;
@@ -25,8 +25,8 @@ CREATE TABLE `auth_group`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `name`(`name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  UNIQUE INDEX `name`(`name` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of auth_group
@@ -41,11 +41,11 @@ CREATE TABLE `auth_group_permissions`  (
   `group_id` int NOT NULL,
   `permission_id` int NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `auth_group_permissions_group_id_permission_id_0cd325b0_uniq`(`group_id`, `permission_id`) USING BTREE,
-  INDEX `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm`(`permission_id`) USING BTREE,
+  UNIQUE INDEX `auth_group_permissions_group_id_permission_id_0cd325b0_uniq`(`group_id` ASC, `permission_id` ASC) USING BTREE,
+  INDEX `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm`(`permission_id` ASC) USING BTREE,
   CONSTRAINT `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `auth_group_permissions_group_id_b120cbf9_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of auth_group_permissions
@@ -61,9 +61,9 @@ CREATE TABLE `auth_permission`  (
   `content_type_id` int NOT NULL,
   `codename` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `auth_permission_content_type_id_codename_01ab375a_uniq`(`content_type_id`, `codename`) USING BTREE,
+  UNIQUE INDEX `auth_permission_content_type_id_codename_01ab375a_uniq`(`content_type_id` ASC, `codename` ASC) USING BTREE,
   CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 113 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 129 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of auth_permission
@@ -180,6 +180,22 @@ INSERT INTO `auth_permission` VALUES (109, 'Can add 角色菜单表', 28, 'add_r
 INSERT INTO `auth_permission` VALUES (110, 'Can change 角色菜单表', 28, 'change_rolemenu');
 INSERT INTO `auth_permission` VALUES (111, 'Can delete 角色菜单表', 28, 'delete_rolemenu');
 INSERT INTO `auth_permission` VALUES (112, 'Can view 角色菜单表', 28, 'view_rolemenu');
+INSERT INTO `auth_permission` VALUES (113, 'Can add 登录日志表', 29, 'add_loginlog');
+INSERT INTO `auth_permission` VALUES (114, 'Can change 登录日志表', 29, 'change_loginlog');
+INSERT INTO `auth_permission` VALUES (115, 'Can delete 登录日志表', 29, 'delete_loginlog');
+INSERT INTO `auth_permission` VALUES (116, 'Can view 登录日志表', 29, 'view_loginlog');
+INSERT INTO `auth_permission` VALUES (117, 'Can add chat message', 30, 'add_chatmessage');
+INSERT INTO `auth_permission` VALUES (118, 'Can change chat message', 30, 'change_chatmessage');
+INSERT INTO `auth_permission` VALUES (119, 'Can delete chat message', 30, 'delete_chatmessage');
+INSERT INTO `auth_permission` VALUES (120, 'Can view chat message', 30, 'view_chatmessage');
+INSERT INTO `auth_permission` VALUES (121, 'Can add media record', 31, 'add_mediarecord');
+INSERT INTO `auth_permission` VALUES (122, 'Can change media record', 31, 'change_mediarecord');
+INSERT INTO `auth_permission` VALUES (123, 'Can delete media record', 31, 'delete_mediarecord');
+INSERT INTO `auth_permission` VALUES (124, 'Can view media record', 31, 'view_mediarecord');
+INSERT INTO `auth_permission` VALUES (125, 'Can add chat session', 32, 'add_chatsession');
+INSERT INTO `auth_permission` VALUES (126, 'Can change chat session', 32, 'change_chatsession');
+INSERT INTO `auth_permission` VALUES (127, 'Can delete chat session', 32, 'delete_chatsession');
+INSERT INTO `auth_permission` VALUES (128, 'Can view chat session', 32, 'view_chatsession');
 
 -- ----------------------------
 -- Table structure for auth_user
@@ -198,8 +214,8 @@ CREATE TABLE `auth_user`  (
   `is_active` tinyint(1) NOT NULL,
   `date_joined` datetime(6) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `username`(`username`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  UNIQUE INDEX `username`(`username` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of auth_user
@@ -214,11 +230,11 @@ CREATE TABLE `auth_user_groups`  (
   `user_id` int NOT NULL,
   `group_id` int NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `auth_user_groups_user_id_group_id_94350c0c_uniq`(`user_id`, `group_id`) USING BTREE,
-  INDEX `auth_user_groups_group_id_97559544_fk_auth_group_id`(`group_id`) USING BTREE,
+  UNIQUE INDEX `auth_user_groups_user_id_group_id_94350c0c_uniq`(`user_id` ASC, `group_id` ASC) USING BTREE,
+  INDEX `auth_user_groups_group_id_97559544_fk_auth_group_id`(`group_id` ASC) USING BTREE,
   CONSTRAINT `auth_user_groups_group_id_97559544_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `auth_user_groups_user_id_6a12ed8b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of auth_user_groups
@@ -233,11 +249,11 @@ CREATE TABLE `auth_user_user_permissions`  (
   `user_id` int NOT NULL,
   `permission_id` int NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `auth_user_user_permissions_user_id_permission_id_14a6b632_uniq`(`user_id`, `permission_id`) USING BTREE,
-  INDEX `auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm`(`permission_id`) USING BTREE,
+  UNIQUE INDEX `auth_user_user_permissions_user_id_permission_id_14a6b632_uniq`(`user_id` ASC, `permission_id` ASC) USING BTREE,
+  INDEX `auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm`(`permission_id` ASC) USING BTREE,
   CONSTRAINT `auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of auth_user_user_permissions
@@ -254,8 +270,8 @@ CREATE TABLE `captcha_captchastore`  (
   `hashkey` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `expiration` datetime(6) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `hashkey`(`hashkey`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  UNIQUE INDEX `hashkey`(`hashkey` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 157 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of captcha_captchastore
@@ -268,6 +284,106 @@ INSERT INTO `captcha_captchastore` VALUES (8, 'UKVJYN', 'ukvjyn', '5853e49f2e14c
 INSERT INTO `captcha_captchastore` VALUES (9, 'GJDIVF', 'gjdivf', '761c6b8eb07e0629a4a4cc9e8d279fc09dfade9e', '2023-02-05 11:34:59.638919');
 INSERT INTO `captcha_captchastore` VALUES (11, 'TZOAEL', 'tzoael', '4203f73e0721d13f2fd157786dbff01c3b414402', '2023-02-05 12:39:17.922433');
 INSERT INTO `captcha_captchastore` VALUES (13, 'QENWOS', 'qenwos', '618faa6570059cf39975b85d196b84e1ba5d7f46', '2023-02-05 19:38:08.782197');
+INSERT INTO `captcha_captchastore` VALUES (15, 'DCBRXC', 'dcbrxc', '5db5c3cbda84e999d0c5252eb199f6ade1dcb8f7', '2023-09-06 16:07:18.089179');
+INSERT INTO `captcha_captchastore` VALUES (17, 'CMDJRZ', 'cmdjrz', '23bc966c8efe7c1860363a4da77ef645779b1147', '2023-09-06 16:23:55.121282');
+INSERT INTO `captcha_captchastore` VALUES (18, 'SDCOOF', 'sdcoof', '44a034dd89bc3b288201e8b46c10dacdfae37236', '2023-09-06 16:23:55.186477');
+INSERT INTO `captcha_captchastore` VALUES (19, 'RLSVQI', 'rlsvqi', 'f3ff8b48281a0ed534f19f46e5be25375daaa82a', '2023-09-07 10:05:55.397856');
+INSERT INTO `captcha_captchastore` VALUES (21, 'OCIQFH', 'ociqfh', '16d39ef845cfbf2d7f07a2e0d0e3b52536293919', '2023-09-07 11:26:47.781217');
+INSERT INTO `captcha_captchastore` VALUES (23, 'SESMGS', 'sesmgs', '1b1ae937a5ad66ac5f1623e48c716d3da860d99d', '2023-09-08 10:34:48.223091');
+INSERT INTO `captcha_captchastore` VALUES (25, 'QMCERH', 'qmcerh', '03f64c4d3333a0d22b231e7ecdc5a140cdc11ffa', '2023-09-08 10:40:49.541254');
+INSERT INTO `captcha_captchastore` VALUES (27, 'SBLRJI', 'sblrji', 'cb8e041d2c07c50c258e89caf0956bb985d41aec', '2023-09-15 16:20:51.151328');
+INSERT INTO `captcha_captchastore` VALUES (29, 'DSEEZS', 'dseezs', 'f7bc78f2d6d94e5dd544b02ccd1777fec77a1adf', '2023-09-17 13:42:01.499522');
+INSERT INTO `captcha_captchastore` VALUES (32, 'YATYPG', 'yatypg', 'b85258d25b885ef864f8d41b765f0de7337a2669', '2023-09-17 13:42:11.139116');
+INSERT INTO `captcha_captchastore` VALUES (33, 'PVVADR', 'pvvadr', '03b9534fbfd5ae3668fb6096870dba13bac69a3a', '2023-11-20 15:57:49.342713');
+INSERT INTO `captcha_captchastore` VALUES (34, 'ZINOQA', 'zinoqa', 'cfc841b2e34068590f01a06020836d296b397fbf', '2023-11-20 15:57:49.488829');
+INSERT INTO `captcha_captchastore` VALUES (35, 'MJZRVD', 'mjzrvd', '2429246c74576cd3812136d61ecaa00e20fbf6a1', '2023-11-20 16:03:27.590582');
+INSERT INTO `captcha_captchastore` VALUES (36, 'JCIJYV', 'jcijyv', '262cc6313c26e0c282b69526a09a257bdaadd564', '2023-11-20 16:03:27.825574');
+INSERT INTO `captcha_captchastore` VALUES (37, 'VOLNRT', 'volnrt', '6111a3a2d5185fb2b47ecf8a2a825128ca786d6e', '2023-11-20 16:16:58.976167');
+INSERT INTO `captcha_captchastore` VALUES (38, 'DLAQLE', 'dlaqle', 'ba8ffed3dc38ad85066393d1ee38cb6f78effca5', '2023-11-20 16:16:59.028879');
+INSERT INTO `captcha_captchastore` VALUES (39, 'COJRHW', 'cojrhw', '667cb3e612e8890fe3cb21f1fc20f4564f0f7392', '2023-11-20 16:17:08.261478');
+INSERT INTO `captcha_captchastore` VALUES (40, 'MZRNJA', 'mzrnja', 'd7765fb2c8c3ac31e01259dfba1c9b5758f6aac0', '2023-11-20 16:17:08.350710');
+INSERT INTO `captcha_captchastore` VALUES (41, 'DYXCRS', 'dyxcrs', 'e88f07872acb08f24966dc013b3defa5cfa97cc5', '2023-11-20 16:17:39.916288');
+INSERT INTO `captcha_captchastore` VALUES (42, 'BASQVS', 'basqvs', '9a072e69e5c0b311e62bf1ccf341dce5f75e0c52', '2023-11-20 16:17:40.125393');
+INSERT INTO `captcha_captchastore` VALUES (43, 'PSQMVV', 'psqmvv', '97756ccc113508500ceebbbe4d3b85ecc5fa454f', '2023-11-20 16:18:32.016650');
+INSERT INTO `captcha_captchastore` VALUES (44, 'YUPYVZ', 'yupyvz', '6de29cb9dd22ee04837f3522e22b54ac9978873e', '2023-11-20 16:18:33.253321');
+INSERT INTO `captcha_captchastore` VALUES (45, 'BWVBCN', 'bwvbcn', 'b8695eaf6383b58bad5cdd26917486cbf1958288', '2023-11-20 16:19:24.085896');
+INSERT INTO `captcha_captchastore` VALUES (46, 'TDWMQK', 'tdwmqk', '3e93907b00911917615917e0fb46effdf50f8cbe', '2023-11-20 16:19:24.143863');
+INSERT INTO `captcha_captchastore` VALUES (47, 'APSALP', 'apsalp', '08f6d396db417d53daac94b1b4c0cd5f549c5e35', '2023-11-20 16:19:40.844170');
+INSERT INTO `captcha_captchastore` VALUES (48, 'XBWWFF', 'xbwwff', '2c77ac85494b9268f0a97be3b4798b89c4620c92', '2023-11-20 16:19:40.867468');
+INSERT INTO `captcha_captchastore` VALUES (49, 'VWTX', 'vwtx', '717edb4cf9fbd14917e68a024ba90aad117e0e66', '2023-11-21 09:12:54.115513');
+INSERT INTO `captcha_captchastore` VALUES (50, 'VEQD', 'veqd', '4b64f3f931fc3e1135a72e65ef51b5ea608b8079', '2023-11-21 09:12:54.350495');
+INSERT INTO `captcha_captchastore` VALUES (51, 'UQFT', 'uqft', '4eb103a89544a82ca9156c701c86e626a3672894', '2023-11-21 09:13:04.746303');
+INSERT INTO `captcha_captchastore` VALUES (52, 'KCKC', 'kckc', 'f744512e15e7b4a1dfe0f5d7c284ece434b84319', '2023-11-21 09:13:04.755303');
+INSERT INTO `captcha_captchastore` VALUES (53, 'UWXQ', 'uwxq', '12b763403ac717a09a7299ffb6e91d1cade9a822', '2023-11-21 09:13:15.352046');
+INSERT INTO `captcha_captchastore` VALUES (54, 'DFTI', 'dfti', '503233de7aa0b93ff77df853501720c1d38a4ca5', '2023-11-21 09:13:15.352046');
+INSERT INTO `captcha_captchastore` VALUES (55, 'DWVF', 'dwvf', 'b1a887bbafca32b49cd201be7272c27ad65ee391', '2023-11-21 09:13:30.027295');
+INSERT INTO `captcha_captchastore` VALUES (56, 'PFIZ', 'pfiz', '747e7f73f84b11e41a268b16a42d726b41291ab7', '2023-11-21 09:13:30.028294');
+INSERT INTO `captcha_captchastore` VALUES (57, 'POPE', 'pope', 'cc3878fdd3172c308807eaa57d4b861612a93efd', '2023-11-21 09:14:25.279577');
+INSERT INTO `captcha_captchastore` VALUES (58, 'YDZR', 'ydzr', '4bd361d94aa387557cc73ea04500a01363afe40f', '2023-11-21 09:14:25.280577');
+INSERT INTO `captcha_captchastore` VALUES (59, 'LQXR', 'lqxr', '0722c811bd15774c9adbf37cc82ab12bf52365f2', '2023-11-21 09:35:55.245693');
+INSERT INTO `captcha_captchastore` VALUES (60, 'WDXW', 'wdxw', '0505b8d167f4f98db13350e3a5a044f64bea8425', '2023-11-21 09:36:11.793753');
+INSERT INTO `captcha_captchastore` VALUES (61, 'RBQW', 'rbqw', 'ffeb84240aa1df5a9a7bba6f155690de79141b62', '2023-11-21 09:36:27.119180');
+INSERT INTO `captcha_captchastore` VALUES (62, 'HNND', 'hnnd', '0e8a4689ddf928042460b7034daad9df3b6706db', '2023-11-21 09:36:27.120179');
+INSERT INTO `captcha_captchastore` VALUES (63, 'PCRRKX', 'pcrrkx', 'b06fc7cf28a84deb7f543e188c436bfcad84cba1', '2023-11-21 09:37:01.053641');
+INSERT INTO `captcha_captchastore` VALUES (65, 'WHCEYY', 'whceyy', 'a663037aecd4aac79de9188caa9c0b039e0a7632', '2023-11-21 09:37:29.615827');
+INSERT INTO `captcha_captchastore` VALUES (66, 'RMRQUB', 'rmrqub', '6c25d548db185e6f2cc06a7dec6e4efe9f3bea4c', '2023-11-21 10:22:57.366429');
+INSERT INTO `captcha_captchastore` VALUES (67, 'NMACSN', 'nmacsn', '4ce37fd1b8e75381a18869138f9cd77955530e01', '2023-11-21 10:22:57.549513');
+INSERT INTO `captcha_captchastore` VALUES (68, 'LAQBUX', 'laqbux', '7f0a3643f72e7b6d429c7b50876fc5f11c00d191', '2023-11-21 10:25:30.101743');
+INSERT INTO `captcha_captchastore` VALUES (70, 'EWAHCL', 'ewahcl', '5d1345a91a18d50675c40ae1623aba208838f72a', '2023-11-21 14:01:48.457235');
+INSERT INTO `captcha_captchastore` VALUES (71, 'IOVMKM', 'iovmkm', 'dc8c105e8d36cbb236f2b6595a561d1f41874535', '2023-11-21 14:01:48.502381');
+INSERT INTO `captcha_captchastore` VALUES (72, 'IMELOW', 'imelow', 'cc8b406490c208c3c5f7be6fa3d9f4ca765836be', '2023-11-21 14:42:25.718578');
+INSERT INTO `captcha_captchastore` VALUES (73, 'AIJLKF', 'aijlkf', 'cbd1bf78fb03a31010be134e18af7df9bf9e4946', '2023-11-21 14:42:25.746346');
+INSERT INTO `captcha_captchastore` VALUES (74, 'OHQGAC', 'ohqgac', '59a723b4def7d4021ec95e746bfd04c829612d5a', '2023-11-21 14:45:22.412043');
+INSERT INTO `captcha_captchastore` VALUES (75, 'BXCSJY', 'bxcsjy', '5694bc354f3980a2ad796eb140f0f7b6a7b947bb', '2023-11-21 14:45:22.438271');
+INSERT INTO `captcha_captchastore` VALUES (76, 'ZRZGBB', 'zrzgbb', '81785ccfdd9233aba4496443165d7fece4984b54', '2023-11-21 14:58:33.347005');
+INSERT INTO `captcha_captchastore` VALUES (77, 'AWRLNY', 'awrlny', 'aba70c25bccee1ff71991a6ec541b1e58f0afa1e', '2023-11-21 14:58:33.379632');
+INSERT INTO `captcha_captchastore` VALUES (78, 'JXWXOQ', 'jxwxoq', 'b7cac332212c02200c79c46d1e0459a8e408a719', '2023-11-21 14:58:36.840191');
+INSERT INTO `captcha_captchastore` VALUES (79, 'WBAADT', 'wbaadt', '40632eadc6718612c6cfb1296e5c4c0a857e3333', '2023-11-21 14:58:36.859215');
+INSERT INTO `captcha_captchastore` VALUES (80, 'KJQTHI', 'kjqthi', '6ae60f041d8e09244681bde9e4fdf72575c78281', '2023-11-21 14:58:43.879749');
+INSERT INTO `captcha_captchastore` VALUES (81, 'NHWMBI', 'nhwmbi', '6c6abf8e5023a5d15babe18bfb8f88185d7108aa', '2023-11-21 14:58:43.897330');
+INSERT INTO `captcha_captchastore` VALUES (82, 'YWPNFO', 'ywpnfo', '1ba3d530a0c907e70f71c5ae9c342f73a803158c', '2023-11-21 14:58:48.465385');
+INSERT INTO `captcha_captchastore` VALUES (83, 'RJIVWZ', 'rjivwz', '4bae1a287a442e575c2fbce72a893761b818243c', '2023-11-21 14:58:48.480714');
+INSERT INTO `captcha_captchastore` VALUES (85, 'VYQLWC', 'vyqlwc', 'c9d7d60d32541c0d57d6ba45776931a2f0c38137', '2023-11-21 14:58:52.483478');
+INSERT INTO `captcha_captchastore` VALUES (86, 'LGKYHM', 'lgkyhm', '2e7671bf5ced83cec6f051d37dce6ef7e1acaacb', '2023-11-21 15:27:04.172350');
+INSERT INTO `captcha_captchastore` VALUES (87, 'BBIAAE', 'bbiaae', '4bf6e091bf3f25dc2057cc65bcbceb4173adb69c', '2023-11-21 15:27:04.200586');
+INSERT INTO `captcha_captchastore` VALUES (88, 'UXZPVB', 'uxzpvb', '93ff40fb4d31d482b6123c6cc2bce9e8d0e1c9f9', '2023-11-21 15:27:30.820680');
+INSERT INTO `captcha_captchastore` VALUES (89, 'JYVAHT', 'jyvaht', '47ae0c8af777d0783f8aec0469ae28a0b51a58de', '2023-11-21 15:28:13.013657');
+INSERT INTO `captcha_captchastore` VALUES (90, 'POIG', 'poig', 'c3999bfd5d2a2efa755fff16590e49fdf1976cb2', '2023-11-21 15:49:27.160726');
+INSERT INTO `captcha_captchastore` VALUES (92, 'SIXT', 'sixt', '899a714867898c1e6a737cfc6bd1cdde555fb36b', '2023-11-21 15:51:23.468368');
+INSERT INTO `captcha_captchastore` VALUES (94, 'HNCI', 'hnci', '94e1f8a07db48609e5ed90c8a73add82cef4d38b', '2023-11-21 16:01:33.028471');
+INSERT INTO `captcha_captchastore` VALUES (96, 'MEHJ', 'mehj', 'e4ff246e385094e85cc7753b7d74d1dc44291206', '2023-11-21 16:01:39.156546');
+INSERT INTO `captcha_captchastore` VALUES (97, 'DTGL', 'dtgl', '62cd958f839c3a6fcea1b97c35644ba7472a96f4', '2023-11-21 16:01:39.170459');
+INSERT INTO `captcha_captchastore` VALUES (99, 'KQRW', 'kqrw', '7624a04d97617dc2b2aec29c09396d5733bb2636', '2023-11-21 16:01:41.023622');
+INSERT INTO `captcha_captchastore` VALUES (100, 'WGBA', 'wgba', 'a32655d87d15e25d41758c97dbe3dd9aede5451d', '2023-11-21 16:07:04.392829');
+INSERT INTO `captcha_captchastore` VALUES (102, 'PJHK', 'pjhk', '92c05f4274cee3d83f9a52b1f0eed05a1c364927', '2023-11-21 16:23:49.145485');
+INSERT INTO `captcha_captchastore` VALUES (104, 'GPIY', 'gpiy', '29e20b74e93e5cd69575f018a629e4b898aa8794', '2023-11-21 16:38:36.865582');
+INSERT INTO `captcha_captchastore` VALUES (106, 'VAYI', 'vayi', '538c6e1d1150cce3ba6ecda59b21cba3d4c09105', '2023-11-21 16:56:53.465002');
+INSERT INTO `captcha_captchastore` VALUES (109, 'MLVW', 'mlvw', 'a38b699290dcc30c13a179d460a36e69bb05091e', '2023-11-21 17:19:36.037688');
+INSERT INTO `captcha_captchastore` VALUES (111, 'CHEG', 'cheg', '632039c715e8c758ccf6ab774556ebf3424c3fd4', '2023-11-21 17:24:05.667164');
+INSERT INTO `captcha_captchastore` VALUES (113, 'FBDL', 'fbdl', '2a2639f99d46a899fdd2821c1903e40620a348b1', '2023-11-21 17:24:52.424116');
+INSERT INTO `captcha_captchastore` VALUES (115, 'ZPXB', 'zpxb', 'ab46803c4d2c989d46bd131aac4c4d6a17294fe5', '2023-11-22 09:08:38.889637');
+INSERT INTO `captcha_captchastore` VALUES (117, 'EVVJ', 'evvj', '172027a2f545b76fc37d34307a997a39830f661a', '2023-11-22 09:09:32.286271');
+INSERT INTO `captcha_captchastore` VALUES (119, 'ZAIX', 'zaix', 'a271d498fb8ceca88fd4234a26e2ada659df00a1', '2023-11-23 09:37:45.336868');
+INSERT INTO `captcha_captchastore` VALUES (122, 'AKBM', 'akbm', 'b5beea0ba5861377eb5d3a4962921c94bb0ba22f', '2023-11-23 14:05:42.886675');
+INSERT INTO `captcha_captchastore` VALUES (124, 'OZJB', 'ozjb', '95b4ad0f998b1344740a3ff13d01e68fa753069b', '2023-11-23 17:20:36.926248');
+INSERT INTO `captcha_captchastore` VALUES (126, 'KGEM', 'kgem', '0ff0b71337c3dddc0f26ab9197c7053ffe6a78c0', '2023-11-24 11:21:54.087586');
+INSERT INTO `captcha_captchastore` VALUES (127, 'AVFE', 'avfe', 'f97ad61c5e74602647541ac97a2dba7bf88221fb', '2023-11-24 11:24:12.356807');
+INSERT INTO `captcha_captchastore` VALUES (128, 'YEGK', 'yegk', 'e0c1b399a0a07577e394f8201204218200b8408d', '2023-11-24 11:24:12.411221');
+INSERT INTO `captcha_captchastore` VALUES (129, 'JZHL', 'jzhl', '75731f7a8587d67be63059154f58d0305ec7ff54', '2023-11-24 11:44:01.664125');
+INSERT INTO `captcha_captchastore` VALUES (130, 'EKYK', 'ekyk', '7d893a3fd1a2232617eeb3fe19402f01a58cb9d5', '2023-11-24 11:44:01.845960');
+INSERT INTO `captcha_captchastore` VALUES (131, 'ADHR', 'adhr', '4a74a5e48fa51b3abd2fe80c1e9ae3221feba215', '2023-11-24 14:26:47.099729');
+INSERT INTO `captcha_captchastore` VALUES (133, 'VYHQ', 'vyhq', 'c3d2ab165b7f9e15bd4a18366f6b8f4076ca3aee', '2023-11-27 09:46:26.486711');
+INSERT INTO `captcha_captchastore` VALUES (135, 'RNYE', 'rnye', 'a728022058675955892ef25e432543c592afb013', '2023-11-28 15:59:22.741080');
+INSERT INTO `captcha_captchastore` VALUES (137, 'LSVP', 'lsvp', '4e8bcdfab3ae744d5161d11fbb4d3a7bf5067e14', '2023-11-28 15:59:40.600464');
+INSERT INTO `captcha_captchastore` VALUES (139, 'ATLD', 'atld', '62f5a554173a5284b0e8ab35953ba68943971c6a', '2023-11-28 16:21:21.444903');
+INSERT INTO `captcha_captchastore` VALUES (141, 'TGDJ', 'tgdj', '709784cbdcfd2b9a36bcfb669b3332fe21741f6c', '2023-11-28 16:22:00.458224');
+INSERT INTO `captcha_captchastore` VALUES (143, 'EZDM', 'ezdm', '3605d37e17a3996a580e68f29ae73cf93afad9b7', '2023-11-28 16:26:01.301334');
+INSERT INTO `captcha_captchastore` VALUES (145, 'IDPE', 'idpe', '4189a70cf77454206dd7319ce9653e7eea8495fb', '2023-11-29 10:38:04.519578');
+INSERT INTO `captcha_captchastore` VALUES (147, 'TGZV', 'tgzv', 'b5286e0604d4e5361913afa95401fecf1e2644cf', '2023-11-29 10:41:12.365205');
+INSERT INTO `captcha_captchastore` VALUES (149, 'GWHI', 'gwhi', '57ccd5e73d09c35eeb8129f0fa56a9afe6f11b7e', '2023-11-29 10:43:56.257535');
+INSERT INTO `captcha_captchastore` VALUES (151, 'GIWI', 'giwi', '4135bdd59c34cef2e7e4817ad4ca494c31882002', '2023-11-29 11:00:05.173162');
+INSERT INTO `captcha_captchastore` VALUES (153, 'ZOSD', 'zosd', 'e2c5696320b5abb769d860dec99feed500215cec', '2023-12-04 15:56:05.074652');
+INSERT INTO `captcha_captchastore` VALUES (155, 'JHLZ', 'jhlz', '2e7e6c1a54a231f7c0ffdd33bacd34c3b21c5de9', '2023-12-06 09:43:55.654296');
 
 -- ----------------------------
 -- Table structure for django_ad
@@ -295,7 +411,7 @@ CREATE TABLE `django_ad`  (
   `sort` int NOT NULL COMMENT '广告排序',
   `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '广告标题',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_ad
@@ -345,7 +461,7 @@ CREATE TABLE `django_ad_sort`  (
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '广告位描述',
   `sort` int NOT NULL COMMENT '广告位排序',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_ad_sort
@@ -366,15 +482,89 @@ CREATE TABLE `django_admin_log`  (
   `content_type_id` int NULL DEFAULT NULL,
   `user_id` int NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `django_admin_log_content_type_id_c4bce8eb_fk_django_co`(`content_type_id`) USING BTREE,
-  INDEX `django_admin_log_user_id_c564eba6_fk_auth_user_id`(`user_id`) USING BTREE,
+  INDEX `django_admin_log_content_type_id_c4bce8eb_fk_django_co`(`content_type_id` ASC) USING BTREE,
+  INDEX `django_admin_log_user_id_c564eba6_fk_auth_user_id`(`user_id` ASC) USING BTREE,
   CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `django_admin_log_user_id_c564eba6_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_admin_log
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for django_chat_media_record
+-- ----------------------------
+DROP TABLE IF EXISTS `django_chat_media_record`;
+CREATE TABLE `django_chat_media_record`  (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `media_type` int NOT NULL,
+  `media_url` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
+  `upload_time` datetime(6) NOT NULL,
+  `message_id` bigint NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `django_Chat_Media_Re_message_id_76008e43_fk_django_Ch`(`message_id` ASC) USING BTREE,
+  CONSTRAINT `django_Chat_Media_Re_message_id_76008e43_fk_django_Ch` FOREIGN KEY (`message_id`) REFERENCES `django_chat_message` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_bin ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of django_chat_media_record
+-- ----------------------------
+INSERT INTO `django_chat_media_record` VALUES (1, 1, 'uploads/chat/audio/20231124_122140_0001.map3', '2023-12-05 10:07:05.145046', 5);
+INSERT INTO `django_chat_media_record` VALUES (2, 2, 'uploads/chat/image/20231124_122144_0001.jpg', '2023-12-05 10:20:49.000000', 7);
+
+-- ----------------------------
+-- Table structure for django_chat_message
+-- ----------------------------
+DROP TABLE IF EXISTS `django_chat_message`;
+CREATE TABLE `django_chat_message`  (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `sender` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
+  `message_text` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
+  `timestamp` datetime(6) NOT NULL,
+  `session_id` bigint NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `django_Chat_Message_session_id_0d2814c2_fk_django_Ch`(`session_id` ASC) USING BTREE,
+  CONSTRAINT `django_Chat_Message_session_id_0d2814c2_fk_django_Ch` FOREIGN KEY (`session_id`) REFERENCES `django_chat_session` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_bin ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of django_chat_message
+-- ----------------------------
+INSERT INTO `django_chat_message` VALUES (1, '龙川', '你好！', '2023-12-05 09:55:59.825988', 1);
+INSERT INTO `django_chat_message` VALUES (2, 'AI', '你好呀！请问有什么可以帮你的吗？', '2023-12-05 09:55:59.829477', 1);
+INSERT INTO `django_chat_message` VALUES (3, '龙川', '这题如果让你解题，且要求40秒内借助选项快速解出题，你会怎么解题。\r\n\r\n一件工作由甲、乙、丙三人完成，若甲、乙合作先干10小时，丙再单干1小时可以完成。已知乙单干用的时间比甲多4小时，丙单干用的时间是甲的1/2还多2小时，问甲单干需多少小时?\r\nA.20 C.30\r\nB.25 D.35\r\n\r\n', '2023-12-05 10:07:05.140546', 1);
+INSERT INTO `django_chat_message` VALUES (4, 'AI', '这个问题可以通过设置方程来解决。假设甲、乙、丙单独完成工作分别需要 a、b、c小时。\r\n根据题目，我们有以下信息：\r\n1、甲和乙合作工作 10 小时，然后丙独立工作 1 小时可以完成工作。这意味着10/a  + 10/b  +1/c = 1\r\n2.乙单独工作的时间比甲多 4 小时，b=a+4\r\n3.丙单独工作的时间是甲的一半再多 2 小时，即c=a/2 + 2\r\n现在，我们可以用这些等式来解出 a 的值。让我们进行计算\r\n解得 a=20 或 a=−2。由于工作时间不可能是负数，所以甲单独完成工作需要的时间是 20 小时。因此，正确答案是 A.20。', '2023-12-05 10:07:05.144055', 1);
+INSERT INTO `django_chat_message` VALUES (5, '龙川', '[这是一段语音url放在uploads/chat/audio/20231124_122140_0001.map3]', '2023-12-05 10:07:05.145064', 1);
+INSERT INTO `django_chat_message` VALUES (6, 'AI', '对于你说的为什么设置总的工作量为什么设置成1，可以这样理解。因为我们不知道总的工作量是多少，就假设总的工作量为一个单位。这样就可以通过“效率=工作总量/时间”得出', '2023-12-05 10:07:05.145064', 1);
+INSERT INTO `django_chat_message` VALUES (7, '龙川', '[这是一张照片url放在uploads/chat/image/20231124_122144_0001.jpg]', '2023-12-05 10:07:05.146073', 1);
+INSERT INTO `django_chat_message` VALUES (8, 'AI', '通过图片可知这题如下：\r\n轨道交通公司定期进行轨道检修工作，甲、乙两个工程队合作进行需4小时完成，甲队单独完成比乙队单独完成快15小时，则甲队单独完成需要的时间是:\r\nA.5小时 C.7小时\r\nB.6小时 D.8小时\r\n\r\n对于这个问题，我们可以使用速启发式方法来解答\r\n1、如果甲队需要 A 小时单独完成工作，则乙队需要 A + 15 小时完成同样的工作2、我们知道他们合作需要 4 小时完成，可以用此信息来估算哪个选项更符合逻辑\r\n通过检验各个选项，我们发现只有选项 A (5小时) 符合题目的所有条件。因此，甲队单独完成工作需要的时间是 5 小时，正确答案是 A.5小时。', '2023-12-05 10:07:05.147064', 1);
+INSERT INTO `django_chat_message` VALUES (9, '龙川', '你好呀', '2023-12-06 09:19:58.000000', 2);
+INSERT INTO `django_chat_message` VALUES (10, 'AI', '你好！请问有什么可以帮助你的！', '2023-12-06 09:20:40.000000', 2);
+INSERT INTO `django_chat_message` VALUES (11, '龙川', '这本书怎么写参考文献艺术概论，ISBN:9787807510857，作者: 彭吉象，张瑞麟著\r\n\r\n这本书怎么写参考文献艺术概论，ISBN:9787807510857，作者: 彭吉象，张瑞麟著\r\n\r\n这本书怎么写参考文献：艺术概论，ISBN978707510857,作者：彭吉象，张瑞麟', '2023-12-06 09:24:04.000000', 3);
+INSERT INTO `django_chat_message` VALUES (12, 'AI', '彭吉象, 张瑞麟. 艺术概论[M]. 上海: 上海音乐出版社, 2007: ', '2023-12-06 09:24:45.000000', 3);
+
+-- ----------------------------
+-- Table structure for django_chat_session
+-- ----------------------------
+DROP TABLE IF EXISTS `django_chat_session`;
+CREATE TABLE `django_chat_session`  (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `start_time` datetime(6) NOT NULL,
+  `end_time` datetime(6) NULL DEFAULT NULL,
+  `user_id` int NOT NULL,
+  `thematic` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `django_Chat_Session_user_id_268a18bd_fk_django_user_id`(`user_id` ASC) USING BTREE,
+  CONSTRAINT `django_Chat_Session_user_id_268a18bd_fk_django_user_id` FOREIGN KEY (`user_id`) REFERENCES `django_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_bin ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of django_chat_session
+-- ----------------------------
+INSERT INTO `django_chat_session` VALUES (1, '2023-12-05 09:41:34.842912', '2023-12-05 10:07:18.000000', 1, '工程问题解答');
+INSERT INTO `django_chat_session` VALUES (2, '2023-12-06 09:19:03.000000', '2023-12-06 09:21:12.000000', 1, '问候');
+INSERT INTO `django_chat_session` VALUES (3, '2023-12-06 09:21:21.000000', NULL, 1, '语段总结');
 
 -- ----------------------------
 -- Table structure for django_city
@@ -400,7 +590,7 @@ CREATE TABLE `django_city`  (
   `lng` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '城市经度',
   `lat` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '城市纬度',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4151 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4151 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_city
@@ -4571,7 +4761,7 @@ CREATE TABLE `django_config`  (
   `sort` int NOT NULL COMMENT '配置排序',
   `note` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '配置备注',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_config
@@ -4600,7 +4790,7 @@ CREATE TABLE `django_config_data`  (
   `sort` int NOT NULL COMMENT '配置项顺序',
   `note` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '配置项备注',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_config_data
@@ -4636,8 +4826,8 @@ CREATE TABLE `django_content_type`  (
   `app_label` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `model` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `django_content_type_app_label_model_76bd3d3b_uniq`(`app_label`, `model`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  UNIQUE INDEX `django_content_type_app_label_model_76bd3d3b_uniq`(`app_label` ASC, `model` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 33 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_content_type
@@ -4660,6 +4850,7 @@ INSERT INTO `django_content_type` VALUES (13, 'item', 'item');
 INSERT INTO `django_content_type` VALUES (14, 'item_cate', 'itemcate');
 INSERT INTO `django_content_type` VALUES (8, 'level', 'level');
 INSERT INTO `django_content_type` VALUES (15, 'link', 'link');
+INSERT INTO `django_content_type` VALUES (29, 'login_log', 'loginlog');
 INSERT INTO `django_content_type` VALUES (22, 'member', 'member');
 INSERT INTO `django_content_type` VALUES (21, 'member_level', 'memberlevel');
 INSERT INTO `django_content_type` VALUES (27, 'menu', 'menu');
@@ -4668,6 +4859,9 @@ INSERT INTO `django_content_type` VALUES (9, 'position', 'position');
 INSERT INTO `django_content_type` VALUES (11, 'role', 'role');
 INSERT INTO `django_content_type` VALUES (28, 'role_menu', 'rolemenu');
 INSERT INTO `django_content_type` VALUES (6, 'sessions', 'session');
+INSERT INTO `django_content_type` VALUES (30, 'study_chat', 'chatmessage');
+INSERT INTO `django_content_type` VALUES (32, 'study_chat', 'chatsession');
+INSERT INTO `django_content_type` VALUES (31, 'study_chat', 'mediarecord');
 INSERT INTO `django_content_type` VALUES (19, 'user', 'user');
 INSERT INTO `django_content_type` VALUES (20, 'user_role', 'userrole');
 
@@ -4689,7 +4883,7 @@ CREATE TABLE `django_dept`  (
   `sort` int NOT NULL COMMENT '部门排序',
   `note` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_dept
@@ -4734,7 +4928,7 @@ CREATE TABLE `django_dict`  (
   `sort` int NOT NULL COMMENT '字典排序',
   `note` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '字典备注',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_dict
@@ -4759,7 +4953,7 @@ CREATE TABLE `django_dict_data`  (
   `note` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '字典项备注',
   `sort` int NOT NULL COMMENT '字典项顺序',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_dict_data
@@ -4791,7 +4985,7 @@ CREATE TABLE `django_item`  (
   `note` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '站点备注',
   `sort` int NOT NULL COMMENT '站点顺序',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_item
@@ -4820,7 +5014,7 @@ CREATE TABLE `django_item_cate`  (
   `note` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '栏目备注',
   `sort` int NOT NULL COMMENT '栏目排序',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_item_cate
@@ -4844,7 +5038,7 @@ CREATE TABLE `django_level`  (
   `sort` int NOT NULL COMMENT '职级顺序',
   `status` int NOT NULL COMMENT '职级状态：1-正常 2-停用',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_level
@@ -4880,7 +5074,7 @@ CREATE TABLE `django_link`  (
   `sort` int NOT NULL COMMENT '友链顺序',
   `note` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '友链备注',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_link
@@ -4915,6 +5109,31 @@ INSERT INTO `django_link` VALUES (27, 0, '2023-02-05 18:11:55.104852', 0, '2023-
 INSERT INTO `django_link` VALUES (28, 0, '2023-02-05 18:11:55.104852', 0, '2023-02-05 18:11:55.105858', 0, 'DjangoAdmin官方网站', 1, 'https://www.djangoadmin.cn', 0, 0, 1, 2, '/images/link/20230205/2023020518115300028.png', 1, 1, '');
 
 -- ----------------------------
+-- Table structure for django_login_log
+-- ----------------------------
+DROP TABLE IF EXISTS `django_login_log`;
+CREATE TABLE `django_login_log`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `create_user` int NOT NULL,
+  `create_time` datetime(6) NULL DEFAULT NULL,
+  `update_user` int NOT NULL,
+  `update_time` datetime(6) NULL DEFAULT NULL,
+  `is_delete` tinyint(1) NOT NULL,
+  `login_name` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
+  `login_ip` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
+  `login_agent` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
+  `login_browser` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
+  `login_os` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
+  `login_area` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
+  `login_time` datetime(6) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb3 COLLATE = utf8mb3_bin ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of django_login_log
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for django_member
 -- ----------------------------
 DROP TABLE IF EXISTS `django_member`;
@@ -4944,7 +5163,7 @@ CREATE TABLE `django_member`  (
   `source` int NOT NULL COMMENT '注册来源：1-网站注册 2-客户端注册 3-小程序注册 4-手机站注册 5-后台添加',
   `status` int NOT NULL COMMENT '状态：1-正常 2-禁用',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_member
@@ -4989,7 +5208,7 @@ CREATE TABLE `django_member_level`  (
   `name` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '会员等级名称',
   `sort` int NOT NULL COMMENT '排序',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_member_level
@@ -5024,9 +5243,9 @@ CREATE TABLE `django_menu`  (
   `update_time` datetime(6) NULL DEFAULT NULL COMMENT '更新时间',
   `is_delete` tinyint(1) NOT NULL COMMENT '逻辑删除',
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `parent_id`(`pid`) USING BTREE,
-  INDEX `name`(`name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 851 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '菜单管理表' ROW_FORMAT = COMPACT;
+  INDEX `parent_id`(`pid` ASC) USING BTREE,
+  INDEX `name`(`name` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 856 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '菜单管理表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of django_menu
@@ -5035,9 +5254,9 @@ INSERT INTO `django_menu` VALUES (1, '系统管理', 'layui-icon-component', '#'
 INSERT INTO `django_menu` VALUES (2, '权限管理', 'layui-icon-component', '#', 1, 0, '', 1, 1, '', 1, 0, NULL, 0, NULL, 0);
 INSERT INTO `django_menu` VALUES (3, '用户管理', 'layui-icon-component', '/user/index', 2, 0, 'sys:user:index', 1, 1, '', 1, 0, NULL, 0, NULL, 0);
 INSERT INTO `django_menu` VALUES (12, '角色管理', 'layui-icon-component', '/role/index', 2, 0, 'sys:role:index', 1, 1, '', 5, 0, NULL, 0, NULL, 0);
-INSERT INTO `django_menu` VALUES (20, '职级管理', 'layui-icon-component', '/level/index', 2, 0, 'sys:level:index', 1, 1, '11', 10, 0, NULL, 0, NULL, 0);
-INSERT INTO `django_menu` VALUES (27, '岗位管理', 'layui-icon-component', '/position/index', 2, 0, 'sys:position:index', 1, 1, '', 20, 0, NULL, 0, NULL, 0);
-INSERT INTO `django_menu` VALUES (34, '部门管理', 'layui-icon-component', '/dept/index', 2, 0, 'sys:dept:index', 1, 1, '', 25, 0, NULL, 0, NULL, 0);
+INSERT INTO `django_menu` VALUES (20, '职级管理', 'layui-icon-component', '/level/index', 2, 0, 'sys:level:index', 1, 1, '11', 10, 0, NULL, 0, NULL, 1);
+INSERT INTO `django_menu` VALUES (27, '岗位管理', 'layui-icon-component', '/position/index', 2, 0, 'sys:position:index', 1, 1, '', 20, 0, NULL, 0, NULL, 1);
+INSERT INTO `django_menu` VALUES (34, '部门管理', 'layui-icon-component', '/dept/index', 2, 0, 'sys:dept:index', 1, 1, '', 25, 0, NULL, 0, NULL, 1);
 INSERT INTO `django_menu` VALUES (44, '菜单管理', 'layui-icon-component', '/menu/index', 2, 0, 'sys:menu:index', 1, 1, '', 7, 0, NULL, 0, NULL, 0);
 INSERT INTO `django_menu` VALUES (54, '操作日志', 'layui-icon-component', '/operlog/index', 2, 0, 'sys:operlog:index', 1, 1, '', 35, 0, NULL, 0, NULL, 1);
 INSERT INTO `django_menu` VALUES (58, '登录日志', 'layui-icon-component', '/loginlog/index', 2, 0, 'sys:loginlog:index', 1, 1, '', 40, 0, NULL, 0, NULL, 1);
@@ -5050,27 +5269,24 @@ INSERT INTO `django_menu` VALUES (109, '网站设置', 'layui-icon-component', '
 INSERT INTO `django_menu` VALUES (110, '系统工具', 'layui-icon-component', '#', 1, 0, '', 1, 1, '', 15, 0, NULL, 0, NULL, 1);
 INSERT INTO `django_menu` VALUES (111, '代码生成器', 'layui-icon-component', '/generate/index', 110, 0, 'sys:generate:index', 1, 1, '', 1, 0, NULL, 0, NULL, 1);
 INSERT INTO `django_menu` VALUES (116, '系统管理', 'layui-icon-component', '#', 1, 0, '', 1, 1, '', 10, 0, NULL, 0, NULL, 0);
-INSERT INTO `django_menu` VALUES (128, '官方网站', 'layui-icon-component', 'https://www.djangoadmin.cn', 1, 0, '', 1, 2, '', 45, 0, NULL, 0, NULL, 0);
-INSERT INTO `django_menu` VALUES (129, '开发文档', 'layui-icon-component', 'http://docs.django.layui.djangoadmin.cn/', 1, 0, '', 1, 2, '', 50, 0, NULL, 0, NULL, 0);
-INSERT INTO `django_menu` VALUES (130, '运营管理', 'layui-icon-component', '#', 0, 0, '', 1, 1, '', 2, 0, NULL, 0, NULL, 0);
-INSERT INTO `django_menu` VALUES (131, '幻灯片管理', 'layui-icon-component', '#', 130, 0, '', 1, 1, '', 1, 0, NULL, 0, NULL, 0);
+INSERT INTO `django_menu` VALUES (130, '运营管理', 'layui-icon-component', '#', 0, 0, '', 1, 1, '', 2, 0, NULL, 0, NULL, 1);
+INSERT INTO `django_menu` VALUES (131, '幻灯片管理', 'layui-icon-component', '#', 130, 0, '', 1, 1, '', 1, 0, NULL, 0, NULL, 1);
 INSERT INTO `django_menu` VALUES (132, '幻灯片位置管理', 'layui-icon-component', '/adsort/index', 131, 0, 'sys:adsort:index', 1, 1, '', 1, 0, NULL, 0, NULL, 0);
 INSERT INTO `django_menu` VALUES (139, '幻灯片管理', 'layui-icon-component', '/ad/index', 131, 0, 'sys:ad:index', 1, 1, '', 5, 0, NULL, 0, NULL, 0);
-INSERT INTO `django_menu` VALUES (161, '站内信管理', 'layui-icon-component', '#', 130, 0, '', 1, 1, '', 10, 0, NULL, 0, NULL, 0);
+INSERT INTO `django_menu` VALUES (161, '站内信管理', 'layui-icon-component', '#', 130, 0, '', 1, 1, '', 10, 0, NULL, 0, NULL, 1);
 INSERT INTO `django_menu` VALUES (162, '通知公告', 'layui-icon-component', '/notice/index', 161, 0, 'sys:notice:index', 1, 1, '', 10, 0, NULL, 0, NULL, 0);
-INSERT INTO `django_menu` VALUES (170, '站点管理', 'layui-icon-component', '#', 130, 0, '', 1, 1, '', 0, 0, NULL, 0, NULL, 0);
+INSERT INTO `django_menu` VALUES (170, '站点管理', 'layui-icon-component', '#', 130, 0, '', 1, 1, '', 0, 0, NULL, 0, NULL, 1);
 INSERT INTO `django_menu` VALUES (171, '站点管理', 'layui-icon-component', '/item/index', 170, 0, 'sys:item:index', 1, 1, '', 1, 0, NULL, 0, NULL, 0);
 INSERT INTO `django_menu` VALUES (178, '栏目管理', 'layui-icon-component', '/itemcate/index', 170, 0, 'sys:itemcate:index', 1, 1, '', 5, 0, NULL, 0, NULL, 0);
-INSERT INTO `django_menu` VALUES (196, '会员中心', 'layui-icon-component', '#', 0, 0, '', 1, 1, '', 10, 0, NULL, 0, NULL, 0);
+INSERT INTO `django_menu` VALUES (196, '会员中心', 'layui-icon-component', '#', 0, 0, '', 1, 1, '', 5, 0, NULL, 0, NULL, 0);
 INSERT INTO `django_menu` VALUES (197, '会员管理', 'layui-icon-component', '#', 196, 0, '', 1, 1, '', 1, 0, NULL, 0, NULL, 0);
 INSERT INTO `django_menu` VALUES (198, '会员等级', 'layui-icon-component', '/memberlevel/index', 197, 0, 'sys:memberlevel:index', 1, 1, '', 1, 0, NULL, 0, NULL, 0);
 INSERT INTO `django_menu` VALUES (205, '会员管理', 'layui-icon-component', '/member/index', 197, 0, 'sys:member:index', 1, 1, '', 5, 0, NULL, 0, NULL, 0);
-INSERT INTO `django_menu` VALUES (212, '统计报表', 'layui-icon-component', '#', 0, 0, '', 1, 1, '', 15, 0, NULL, 0, NULL, 0);
+INSERT INTO `django_menu` VALUES (212, '学习分析', 'layui-icon-component', '#', 0, 0, '', 1, 1, '', 15, 0, NULL, 0, NULL, 0);
 INSERT INTO `django_menu` VALUES (213, '数据统计', 'layui-icon-component', '#', 212, 0, '', 1, 1, '', 1, 0, NULL, 0, NULL, 0);
 INSERT INTO `django_menu` VALUES (214, '统计报表', 'layui-icon-component', '/analysis/index', 213, 0, 'sys:analysis:index', 1, 1, '', 1, 0, NULL, 0, NULL, 0);
 INSERT INTO `django_menu` VALUES (216, '演示一', 'layui-icon-component', '/example/index', 225, 0, 'sys:example:index', 1, 1, '', 10, 0, NULL, 0, NULL, 1);
 INSERT INTO `django_menu` VALUES (225, '演示案例', 'layui-icon-login-qq', '#', 110, 0, '', 1, 1, '', 5, 0, NULL, 0, NULL, 1);
-INSERT INTO `django_menu` VALUES (227, '获取授权', 'layui-icon-util', 'https://www.djangoadmin.cn/goods/detail/1', 1, 0, '', 1, 2, '', 46, 0, NULL, 0, NULL, 0);
 INSERT INTO `django_menu` VALUES (236, '演示二', 'layui-icon-component', '/example2/index', 225, 0, 'sys:example2:index', 1, 1, '', 10, 0, NULL, 0, NULL, 1);
 INSERT INTO `django_menu` VALUES (696, '查询用户', '', '/user/list', 3, 1, 'sys:user:list', 1, 1, '', 1, 0, NULL, 0, NULL, 0);
 INSERT INTO `django_menu` VALUES (697, '添加用户', '', '/user/add', 3, 1, 'sys:user:add', 1, 1, '', 5, 0, NULL, 0, NULL, 0);
@@ -5227,6 +5443,10 @@ INSERT INTO `django_menu` VALUES (847, '删除演示二', '', '/example2/delete'
 INSERT INTO `django_menu` VALUES (848, '演示二详情', '', '/example2/detail', 236, 1, 'sys:example2:detail', 1, 1, '', 20, 0, NULL, 0, NULL, 1);
 INSERT INTO `django_menu` VALUES (849, '设置状态', '', '/example2/status', 236, 1, 'sys:example2:status', 1, 1, '', 25, 0, NULL, 0, NULL, 1);
 INSERT INTO `django_menu` VALUES (850, '批量删除', '', '/example2/dall', 236, 1, 'sys:example2:dall', 1, 1, '', 30, 0, NULL, 0, NULL, 1);
+INSERT INTO `django_menu` VALUES (852, '智慧树屋', 'layui-icon-component', '#', 0, 0, '', 1, 1, '', 10, 1, '2023-11-28 15:42:08.981050', 0, '2023-11-28 15:42:08.981050', 0);
+INSERT INTO `django_menu` VALUES (853, '亿智导师', 'layui-icon-component', '/chat/index', 852, 0, 'sys:chat:index', 1, 1, '', 1, 1, '2023-11-28 15:47:21.445618', 1, '2023-11-28 15:47:21.445618', 0);
+INSERT INTO `django_menu` VALUES (854, '智力迷宫', 'layui-icon-component', '/question/index', 852, 0, 'sys:question:index', 1, 1, '', 2, 1, '2023-11-28 15:50:55.384581', 1, '2023-11-28 15:50:55.384581', 0);
+INSERT INTO `django_menu` VALUES (855, '知识海洋', 'layui-icon-component', '/studyVid/index', 852, 0, 'sys:studyVid:index', 1, 1, '', 3, 1, '2023-11-28 15:52:29.682498', 1, '2023-11-28 15:52:29.682498', 0);
 
 -- ----------------------------
 -- Table structure for django_menu2
@@ -5250,7 +5470,7 @@ CREATE TABLE `django_menu2`  (
   `sort` int NOT NULL COMMENT '排序',
   `note` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_menu2
@@ -5266,7 +5486,7 @@ CREATE TABLE `django_migrations`  (
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 45 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 55 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_migrations
@@ -5315,6 +5535,12 @@ INSERT INTO `django_migrations` VALUES (41, 'user', '0002_alter_user_salt', '202
 INSERT INTO `django_migrations` VALUES (42, 'user', '0003_alter_user_password', '2023-02-05 12:26:06.209299');
 INSERT INTO `django_migrations` VALUES (43, 'role_menu', '0001_initial', '2023-02-05 13:38:36.456850');
 INSERT INTO `django_migrations` VALUES (44, 'role_menu', '0002_remove_rolemenu_create_time_and_more', '2023-02-05 13:39:14.353699');
+INSERT INTO `django_migrations` VALUES (45, 'ad', '0002_alter_ad_content', '2023-12-04 14:58:39.577306');
+INSERT INTO `django_migrations` VALUES (46, 'login_log', '0001_initial', '2023-12-04 14:58:39.607720');
+INSERT INTO `django_migrations` VALUES (47, 'menu', '0002_alter_menu_status_alter_menu_target', '2023-12-04 14:58:39.611712');
+INSERT INTO `django_migrations` VALUES (52, 'study_chat', '0001_initial', '2023-12-05 09:39:54.096856');
+INSERT INTO `django_migrations` VALUES (53, 'study_chat', '0002_alter_mediarecord_media_type', '2023-12-05 10:16:51.472750');
+INSERT INTO `django_migrations` VALUES (54, 'study_chat', '0003_chatsession_thematic', '2023-12-05 14:12:43.456269');
 
 -- ----------------------------
 -- Table structure for django_notice
@@ -5335,7 +5561,7 @@ CREATE TABLE `django_notice`  (
   `is_top` int NOT NULL COMMENT '是否置顶：1-是 2-否',
   `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '通知公告标题',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_notice
@@ -5385,7 +5611,7 @@ CREATE TABLE `django_position`  (
   `sort` int NOT NULL COMMENT '岗位顺序',
   `status` int NOT NULL COMMENT '岗位状态：1-正常 2-停用',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_position
@@ -5429,7 +5655,7 @@ CREATE TABLE `django_role`  (
   `sort` int NOT NULL COMMENT '角色排序',
   `note` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_role
@@ -5437,7 +5663,7 @@ CREATE TABLE `django_role`  (
 INSERT INTO `django_role` VALUES (1, 0, '2023-02-05 12:14:16.378711', 0, '2023-02-05 12:14:16.378711', 0, '超级管理员', 'ROLE_ADMIN', 1, 1, '');
 INSERT INTO `django_role` VALUES (2, 0, '2023-02-05 12:14:55.443077', 0, '2023-02-05 12:14:55.443077', 0, '管理员', 'ROLE_ADMIN', 1, 5, '');
 INSERT INTO `django_role` VALUES (3, 0, '2023-02-05 12:15:28.063630', 0, '2023-02-05 12:15:28.063630', 0, '开发账号', 'ROLE_DEV', 1, 10, '');
-INSERT INTO `django_role` VALUES (4, 0, '2023-02-05 12:15:40.277720', 0, '2023-02-05 12:15:40.277720', 0, '演示账号', 'ROLE_DEMO', 1, 15, '');
+INSERT INTO `django_role` VALUES (4, 0, '2023-02-05 12:15:40.277720', 1, '2023-02-05 12:15:40.277720', 0, '用户账号', 'ROLE_DEMO', 1, 15, '');
 
 -- ----------------------------
 -- Table structure for django_role_menu
@@ -5448,7 +5674,7 @@ CREATE TABLE `django_role_menu`  (
   `role_id` int NOT NULL,
   `menu_id` int NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 385 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 397 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_role_menu
@@ -5625,6 +5851,14 @@ INSERT INTO `django_role_menu` VALUES (381, 2, 212);
 INSERT INTO `django_role_menu` VALUES (382, 2, 213);
 INSERT INTO `django_role_menu` VALUES (383, 2, 214);
 INSERT INTO `django_role_menu` VALUES (384, 2, 836);
+INSERT INTO `django_role_menu` VALUES (389, 4, 852);
+INSERT INTO `django_role_menu` VALUES (390, 4, 853);
+INSERT INTO `django_role_menu` VALUES (391, 4, 854);
+INSERT INTO `django_role_menu` VALUES (392, 4, 855);
+INSERT INTO `django_role_menu` VALUES (393, 4, 212);
+INSERT INTO `django_role_menu` VALUES (394, 4, 213);
+INSERT INTO `django_role_menu` VALUES (395, 4, 214);
+INSERT INTO `django_role_menu` VALUES (396, 4, 836);
 
 -- ----------------------------
 -- Table structure for django_session
@@ -5635,13 +5869,20 @@ CREATE TABLE `django_session`  (
   `session_data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `expire_date` datetime(6) NOT NULL,
   PRIMARY KEY (`session_key`) USING BTREE,
-  INDEX `django_session_expire_date_a5c62663`(`expire_date`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  INDEX `django_session_expire_date_a5c62663`(`expire_date` ASC) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_session
 -- ----------------------------
+INSERT INTO `django_session` VALUES ('0adc7vihulda5fyvqwnyyvt0tfr6ynu8', 'eyJ1c2VyX2lkIjoxfQ:1rAgwI:27AUSTqGlOonkzptxHIpt5ag-f-2NgqG_VNjI_Ckzes', '2023-12-20 09:43:02.176719');
+INSERT INTO `django_session` VALUES ('1qzcc4coikh3d4uzlqlyghz8xmxmfll3', 'eyJ1c2VyX2lkIjoxfQ:1qhkX4:0qDD1UPiaI36gfvQQaBfSMNanO16aFh_hHUA5xA9CEE', '2023-10-01 13:41:22.093266');
+INSERT INTO `django_session` VALUES ('8rbf2u2bx1lr0ru0rpjo0mwgsavvofd8', 'eyJ1c2VyX2lkIjoxfQ:1r7Qgm:RjxFdDNhWn4zD8hkzHTldIQ0-Oko-GL5i9Ivl_cUTGI', '2023-12-11 09:45:32.816453');
+INSERT INTO `django_session` VALUES ('b5t3kp2we0myoykqcqfktpdkximqvyet', 'eyJ1c2VyX2lkIjoxfQ:1r5FgP:R9YhvnOz8TBXyAeNYpC4w36mv7QV9q-STleK5wggZ-I', '2023-12-05 09:36:09.529343');
 INSERT INTO `django_session` VALUES ('e6ion7b3e9xotptt5u8x70ouu8bp4q2v', 'eyJ1c2VyX2lkIjoxfQ:1pOdL7:sUdKWQyc5mjFIcG6ncBizizEb7lU_Xu6HuhX2aR2IH4', '2023-02-19 19:37:45.511792');
+INSERT INTO `django_session` VALUES ('hbrzu1op8s113etqujls6ojbr6lwyfh7', 'eyJ1c2VyX2lkIjoxfQ:1qe5eg:RmdGWST9N6JWAijtHVzmvvesInCwl0KW3o6Va1UGFbA', '2023-09-21 11:26:06.094439');
+INSERT INTO `django_session` VALUES ('whj0dzihfq8s79l3cndl9iup9yaeztza', 'eyJ1c2VyX2lkIjoxfQ:1r7szW:E2lupVoJy-Ab1GewqQGSwZtm-8sSNOpOhnTaiB4R0d0', '2023-12-12 15:58:46.473720');
+INSERT INTO `django_session` VALUES ('zeoj15js62op8oq3tnn776jkkrw7ud0h', 'eyJ1c2VyX2lkIjoxfQ:1r5MzA:IlubfLiZiOT4jezg-P1buDLoX0MTq8i0xD11W_r_aCc', '2023-12-05 17:24:00.328539');
 
 -- ----------------------------
 -- Table structure for django_user
@@ -5677,37 +5918,14 @@ CREATE TABLE `django_user`  (
   `note` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '个人备注',
   `sort` int NOT NULL COMMENT '排序',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 27 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_user
 -- ----------------------------
-INSERT INTO `django_user` VALUES (1, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (2, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin2', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (3, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin3', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (4, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin4', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (5, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin5', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (6, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin6', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (7, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin7', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (8, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin8', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (9, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin9', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (10, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin10', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (11, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin11', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (12, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin12', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (13, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin13', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (14, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin14', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (15, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin15', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (16, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin16', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (17, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin17', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (18, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin18', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (19, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin19', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (20, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin20', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (21, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin21', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (22, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin22', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (23, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin23', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (24, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin24', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (25, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin25', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
-INSERT INTO `django_user` VALUES (26, 0, '2023-02-05 12:37:18.633985', 0, '2023-02-05 12:37:18.633985', 0, '一米阳光', '一米阳光', 2, '/images/user/20230205/2023020512370900029.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 2, '110000000000', '110100000000', '110105000000', '', 'XXXX软件园区', 'admin26', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
+INSERT INTO `django_user` VALUES (1, 0, '2023-02-05 12:37:18.633985', 1, '2023-02-05 12:37:18.633985', 0, '龙川', '龙川', 1, '/images/user/20231128/2023112816141200048.png', '13000000001', '12345678@qq.com', '2023-02-05', 9, 4, 15, '430000000000', '433100000000', '433101000000', '', 'XXXX软件园区', 'admin', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '暂无', 1);
+INSERT INTO `django_user` VALUES (27, 1, '2023-11-28 15:56:32.810914', 1, '2023-11-28 15:56:32.810914', 0, '周绮', '周绮', 2, '/images/user/20231128/2023112816090900052.png', '13000010002', '123@qq.com', '2001-10-02', 1, 2, 6, '430000000000', '433100000000', '433130000000', '', '嘻嘻！保密', 'zhouqi', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '', 1);
+INSERT INTO `django_user` VALUES (29, 1, '2023-11-29 11:07:27.561322', 1, '2023-11-29 11:07:27.561322', 0, 'test', '77', 2, '/images/user/20231129/2023112911061400002.png', '13000000003', '123@qq.com', '2023-11-23', 1, 7, 7, '220000000000', '220700000000', '220781000000', '', '1121', 'test', 'e10adc3949ba59abbe56e057f20f883e', NULL, '', 1, '', 3);
 
 -- ----------------------------
 -- Table structure for django_user_role
@@ -5718,12 +5936,15 @@ CREATE TABLE `django_user_role`  (
   `user_id` int NOT NULL COMMENT '用户ID',
   `role_id` int NOT NULL COMMENT '角色ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of django_user_role
 -- ----------------------------
 INSERT INTO `django_user_role` VALUES (1, 2, 2);
-INSERT INTO `django_user_role` VALUES (3, 1, 1);
+INSERT INTO `django_user_role` VALUES (8, 27, 4);
+INSERT INTO `django_user_role` VALUES (9, 1, 1);
+INSERT INTO `django_user_role` VALUES (10, 28, 4);
+INSERT INTO `django_user_role` VALUES (12, 29, 4);
 
 SET FOREIGN_KEY_CHECKS = 1;

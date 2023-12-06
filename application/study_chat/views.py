@@ -4,8 +4,8 @@ from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views import View
 
-from application.role import services
-from config.env import DEBUG
+from application.study_chat import services
+from application.study_chat import tests
 from middleware.login_middleware import check_login
 from middleware.permission_middleware import PermissionRequired
 
@@ -21,6 +21,9 @@ class ChatIndexView(PermissionRequired, View):
 
     # 接收GET请求
     def get(self, request):
+        # 根据用户获取历史对话消息
+        user_id = request.session.get('user_id')
+
         # 渲染HTML模板
         return render(request, "study_chat/index.html")
 

@@ -234,6 +234,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # 数据表前缀
 TABLE_PREFIX = locals().get('TABLE_PREFIX', "")
 
+
 # ======================== 验证码相关配置 ===========================
 CAPTCHA_IMAGE_SIZE = (200, 60)  # 设置 captcha 图片大小
 CAPTCHA_LENGTH = 4  # 字符个数
