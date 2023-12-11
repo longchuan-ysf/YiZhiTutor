@@ -1,5 +1,39 @@
-<div class="layui-bg-gray" style="height: 100%">
-    <div>
-        占位用
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/study_chat/thematic.css' %}">
+</head>
+<body>
+<div class="layui-row chat-thematic">
+    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 layui-col-lg12 layui-bg-cyan chat-thematic-header">
+        <div class="head-container">
+            <div class="thematic-logo">
+                <img src="/static/assets/images/logo.png" class="thematic-logo-image">
+            </div>
+            <div class="thematic-title">
+                <p>亿智导师</p>
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 layui-col-lg12 layui-bg-cyan chat-thematic-content ">
+        <ul class="layui-nav layui-nav-tree layui-inline layui-bg-cyan" lay-filter="thematic" style="width: 100%;">
+            <li class="layui-nav-item"><a href="javascript:;" onclick="startConversation()">新对话</a></li>
+            {% for session in content.data %}
+                <li class="layui-nav-item">
+                    <a href="javascript:;" onclick="sendRequest({{ session.session_id }})">{{ session.thematic }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 layui-col-lg12  layui-bg-cyan chat-thematic-foot">
+        <div class="thematic-foot-date">
+            <i class="layui-icon layui-icon-date" style="font-size: 30px; color: #1E9FFF;"></i>
+        </div>
+        <div class="thematic-foot-add">
+            <i class="layui-icon layui-icon-addition" style="font-size: 30px; color: #1E9FFF;"></i>
+        </div>
     </div>
 </div>
+</body>
+</html>

@@ -28,6 +28,7 @@
 .message-input-container {
     display: flex;
     align-items: center;
+    width: 99%;
     height: 60%; /* 占chat-toolbar-chatmain高度的60% */
     border: 1px solid #6d737b;
     border-radius: 20px;
@@ -42,16 +43,17 @@
     border: none;
 }
 .chat-form-text{
-    width: 90%;
     margin: 0;
-    padding: 14px;
+    padding-left: 14px;
 
 }
 .chat-form-submit{
-    width: 10%;
     display: flex; /* 也使用Flex布局以便居中图标 */
     justify-content: center; /* 水平居中 */
     align-items: center; /* 垂直居中 */
     margin: 0;
+}
+.submit-icon{
+    color: #1E9FFF;
 }
 

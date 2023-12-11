@@ -1,0 +1,69 @@
+.bubble {
+    max-width: 300px;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    position: relative; /* 为了绝对定位尾巴 */
+    box-shadow: 0 0 8px rgba(0,0,0,0.2);
+    margin-top: 15px; /* 留出空间显示三角形 */
+}
+
+.bubble-content {
+    color: #333;
+}
+
+/* 用户1的消息样式 */
+.bubble-left {
+    background-color: #e0e0e0;
+    align-self: flex-start;
+    margin-right: auto; /* 保证气泡靠左 */
+}
+
+/* 用户2的消息样式 */
+.bubble-right {
+    background-color: #d1e7ff;
+    align-self: flex-end;
+    margin-left: auto; /* 保证气泡靠右 */
+}
+
+/* 用户1的气泡三角消息样式，气泡靠左，三角在左上角 */
+.bubble-left::after {
+    content: "";
+    position: absolute;
+    top: -20px; /* 调整至气泡外部顶部 */
+    left: 11px; /* 三角形的水平位置，距离气泡的左边界一定距离 */
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    border-bottom-color: #e0e0e0; /* 三角形的颜色与气泡背景相同 */
+}
+/* 用户2的气泡三角消息样式，气泡靠右，三角在右上角 */
+.bubble-right::after {
+    content: "";
+    position: absolute;
+    top: -20px; /* 调整至气泡外部顶部 */
+    right: 11px; /* 三角形的水平位置，距离气泡的右边界一定距离 */
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    border-bottom-color: #d1e7ff; /* 三角形的颜色与气泡背景相同 */
+}
+
+.chat-message {
+    display: flex;
+    flex-direction: column;
+}
+
+.avatar-container-left {
+    align-self: flex-start;
+    margin-left: 6px;
+}
+.avatar-container-right {
+    align-self: flex-end;
+    margin-right: 6px;
+}
+.avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}

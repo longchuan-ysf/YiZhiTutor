@@ -1,12 +1,55 @@
+/*
+* 根据窗口的大小改编界面上面元素的大小
+* */
 function adjustLayout() {
-    var parentHeight = document.querySelector('.chat-body').offsetHeight;
-
-    document.querySelector('.chat-content').style.height = (parentHeight * 0.75) + 'px';
-    document.querySelector('.chat-tolbar-container').style.height = (parentHeight * 0.05) + 'px';
+    //------------------------聊天窗口的大小调整 -----------------------------------//
+    var chatParentHeight = document.querySelector('.chat-body').offsetHeight;
+    document.querySelector('.chat-content').style.height = (chatParentHeight * 0.75) + 'px';
+    document.querySelector('.chat-tolbar-container').style.height = (chatParentHeight * 0.05) + 'px';
     document.querySelectorAll('.chat-toolbar-icon').forEach(function (icon) {
-        icon.style.fontSize = (parentHeight * 0.04) + 'px';
+        icon.style.fontSize = (chatParentHeight * 0.04) + 'px';
     });
-    document.querySelector('.chat-toolbar-chatmain').style.height = (parentHeight * 0.20) + 'px';
+    document.querySelector('.chat-toolbar-chatmain').style.height = (chatParentHeight * 0.20) + 'px';
+    // 获取chat-toolbar-chatmain的宽度
+    var messageInputContainer_w = document.querySelector('.message-input-container').offsetWidth;
+    var messageInputContainer_h = document.querySelector('.message-input-container').offsetHeight;
+    // 调整textarea的大小
+    var textarea = document.querySelector('.text-edit');
+    textarea.style.width = (messageInputContainer_w * 0.83) + 'px';  // 例如，设置宽度为chat-toolbar-chatmain宽度的80%
+    textarea.style.height = (messageInputContainer_h * 0.7) + 'px'; // 自动高度，或者也可以设置一个基于chatToolbarChatmainWidth的值
+    // 调整submitChat图标的大小
+    var submitChatIcon = document.querySelector('.submit-icon');
+    submitChatIcon.style.fontSize = (messageInputContainer_w * 0.07) + 'px'; //messageInputContainer_w
+
+     //------------------------主题窗口的大小调整 -----------------------------------//
+    var thematicParentHeight = document.querySelector('.chat-thematic').offsetHeight;
+    document.querySelector('.chat-thematic-header').style.height = (thematicParentHeight * 0.08) + 'px';
+    document.querySelector('.chat-thematic-content').style.height = (thematicParentHeight * 0.80) + 'px';
+
+    // 动态设置字体大小
+    setThematicFontSize();
+
+
+}
+function setThematicFontSize() {
+    // 计算并设置头部字体大小
+    var thematicHeader = document.querySelector('.chat-thematic-header');
+    if (thematicHeader) {
+        var headerWidth = thematicHeader.offsetWidth;
+        var headerFontSize = headerWidth * 0.08; // 字体大小为宽度的0.8%
+        thematicHeader.style.fontSize = headerFontSize + 'px';
+    }
+
+    // 计算并设置内容字体大小
+    var thematicContent = document.querySelector('.chat-thematic-content');
+    if (thematicContent) {
+        var contentWidth = thematicContent.offsetWidth;
+        var links = thematicContent.querySelectorAll('.layui-nav-item a');
+        var contentFontSize = contentWidth * 0.03; // 示例：字体大小为宽度的0.03%
+        links.forEach(function(link) {
+            link.style.fontSize = contentFontSize + 'px';
+        });
+    }
 }
 
 window.onload = adjustLayout;
@@ -49,3 +92,25 @@ layui.use("form", function () {
 
 });
 
+function startConversation() {
+    // 开始对话的逻辑
+}
+
+function sendRequest(sessionId) {
+    $.ajax({
+        url: '/chat/thematic', // 替换为您的服务器端点
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ session_id: sessionId }),
+        success: function(response) {
+            // 这里处理成功的响应
+            console.log('Response:', response);
+            console.log("data type:",typeof response.data)
+            console.log("data:",response.data)
+        },
+        error: function(xhr, status, error) {
+            // 这里处理错误情况
+            console.error('Error:', error);
+        }
+    });
+}

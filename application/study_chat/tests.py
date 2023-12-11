@@ -91,7 +91,7 @@ def get_chat_messages_as_json(user_id, session_id):
         }
 
 
-def get_latest_chat_sessions_as_json(user_id, n=5):
+def get_latest_chat_sessions(user_id, n=8):
     try:
         # 获取用户的最新n个会话
         latest_sessions = ChatSession.objects.filter(user_id=user_id).order_by('-start_time')[:n]
@@ -120,9 +120,41 @@ def get_latest_chat_sessions_as_json(user_id, n=5):
 
 
 
+def get_latest_chat_sessions_with_thematic(user_id, n=8):
+    try:
+        # 获取用户的最新n个会话
+        latest_sessions = ChatSession.objects.filter(user_id=user_id).order_by('-start_time')[:n]
+
+        # 使用values()来选择特定的字段
+        sessions_data = latest_sessions.values('id', 'thematic')
+
+        thematic_data = []
+
+        for session in sessions_data:
+            session_id = session['id']
+            thematic = session['thematic']
+
+            thematic_data.append({
+                "session_id": session_id,
+                "thematic": thematic,
+            })
+
+        return {
+            "status": True,
+            "message": "Latest chat sessions with thematics fetched successfully.",
+            "data": thematic_data
+        }
+
+    except Exception as e:
+        return {
+            "status": False,
+            "message": f"An error occurred: {str(e)}",
+            "data": {}
+        }
+
 def main():
     # 示例调用函数
-    json_response = get_latest_chat_sessions_as_json(1)  # 假设的用户ID和会话ID
+    json_response = get_latest_chat_sessions_with_thematic(1)  # 假设的用户ID和会话ID
     print(json_response)
     print(f"get {len(json_response['data'])} data")
 

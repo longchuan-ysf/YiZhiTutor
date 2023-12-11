@@ -1,0 +1,71 @@
+.chat-thematic {
+    display: flex;
+    flex-direction: column;/* 在垂直方向布局三大容器 chat-thematic-header  chat-thematic-content chat-thematic-foot*/
+    height: 100%; /* 初始化为父容器的100% */
+    overflow: hidden;
+}
+
+.chat-thematic-header{
+
+
+}
+
+.chat-thematic-content {
+    /* 垂直方向自动加滚条 */
+    overflow-y: auto;
+}
+
+.chat-thematic-foot {
+    display: flex;
+    align-items: center; /* 垂直居中图标 */
+}
+
+
+
+.head-container {
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+    height: 100%;
+    width: 100%;
+}
+
+.thematic-logo, .thematic-title {
+    display: flex;
+
+}
+.thematic-logo{
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+    width: 30%;
+}
+.thematic-title{
+    width: 70%;
+    color: #d7d7d7;
+}
+
+
+.thematic-logo-image {
+    width: 50%;
+    display: block; /* 可选，消除图片底部的空白间隙 */
+}
+
+
+.thematic-foot-date,.thematic-foot-add{
+    width: 50%;
+    display: flex; /* 使用flex布局 */
+    align-items: center; /* 垂直居中 */
+}
+.thematic-foot-date {
+    justify-content: flex-start; /* 左对齐 */
+    margin-left: 0.01%;
+}
+
+.thematic-foot-add {
+    justify-content: flex-end; /* 右对齐 */
+    margin-right: 0.01%;
+}
+
+
+
+
