@@ -26,8 +26,8 @@ def get_chat_messages_as_json(user_id, session_id):
         messages = ChatMessage.objects.filter(session_id=session_id, session__user_id=user_id).order_by('timestamp')
 
         # 用于识别特定格式消息的正则表达式
-        pattern = r'\[这是\w+url放在([^\]]+)\]'
-
+        # pattern = r'\[这是\w+url放在([^\]]+)\]'
+        pattern = r'\[这是\w+url放在([^\]]+)\](.*)'
         # 初始化响应数据结构
         response_data = {
             "date": "",  # 会话日期
@@ -53,13 +53,17 @@ def get_chat_messages_as_json(user_id, session_id):
                 if media_record:
                     message_data["media_type"] = media_record.media_type
                     message_data["media_url"] = media_record.media_url
+                    # if media_record.media_type == 1 and match.group(2).strip():
+                    #     audio_text = match.group(2).strip()
+                    #     message_data["message_text"] = audio_text
+
 
             response_data["messages"].append(message_data)
 
             # 更新会话日期
             if not response_data["date"]:
                 response_data["date"] = message.timestamp.strftime("%Y-%m-%d")
-
+        print(response_data)
         return json.dumps({"status": True, "message": "Query successful.", "data": response_data},cls=DjangoJSONEncoder)
 
     except ObjectDoesNotExist:

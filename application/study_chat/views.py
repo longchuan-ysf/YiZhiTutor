@@ -8,11 +8,11 @@ from application.study_chat import services
 from application.study_chat import tests
 from middleware.login_middleware import check_login
 from middleware.permission_middleware import PermissionRequired
-
+from application.user.models import User
 # 渲染角色首页
 from utils import R
 import json
-
+from utils.utils import getImageURL
 # 角色首页
 @method_decorator(check_login, name='get')
 class ChatIndexView(PermissionRequired, View):
@@ -24,9 +24,10 @@ class ChatIndexView(PermissionRequired, View):
         # 根据用户获取历史对话消息
         user_id = request.session.get('user_id')
         content = services.get_latest_chat_sessions_with_thematic(user_id)
-
+        userInfo = User.objects.filter(is_delete=False, id=user_id).first()
+        userInfo.avatar = getImageURL(userInfo.avatar)
         # 渲染HTML模板
-        return render(request, "study_chat/index.html",{'content': content})
+        return render(request, "study_chat/index.html",{'content': content,'userInfo':userInfo})
 
 
 

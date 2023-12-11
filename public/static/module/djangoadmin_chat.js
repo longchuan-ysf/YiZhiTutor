@@ -45,7 +45,7 @@ function setThematicFontSize() {
     if (thematicContent) {
         var contentWidth = thematicContent.offsetWidth;
         var links = thematicContent.querySelectorAll('.layui-nav-item a');
-        var contentFontSize = contentWidth * 0.03; // 示例：字体大小为宽度的0.03%
+        var contentFontSize = contentWidth * 0.06; // 示例：字体大小为宽度的0.03%
         links.forEach(function(link) {
             link.style.fontSize = contentFontSize + 'px';
         });
@@ -103,10 +103,24 @@ function sendRequest(sessionId) {
         contentType: 'application/json',
         data: JSON.stringify({ session_id: sessionId }),
         success: function(response) {
-            // 这里处理成功的响应
-            console.log('Response:', response);
-            console.log("data type:",typeof response.data)
-            console.log("data:",response.data)
+            // var data = JSON.parse(response.data);
+            var data;
+            if (typeof response.data === 'string') {
+                // 如果是字符串，则解析为 JSON
+                data = JSON.parse(response.data);
+            } else {
+                // 如果已经是对象，则直接使用
+                data = response.data;
+            }
+
+            console.log("Processed data:", data);
+
+            // 检查 data 对象是否包含 messages 属性
+            if (data && data.data && data.data.messages) {
+                displayMessages(data.data);
+            } else {
+                console.error('Data does not contain messages');
+            }
         },
         error: function(xhr, status, error) {
             // 这里处理错误情况
@@ -114,3 +128,31 @@ function sendRequest(sessionId) {
         }
     });
 }
+
+function displayMessages(data) {
+    var chatContainer = document.getElementById('chat-container');
+    chatContainer.innerHTML = ''; // 清空现有内容
+    var userInfo = document.getElementById('userInfo');
+    var avatarUrl = userInfo.getAttribute('data-avatar'); // 获取头像 URL
+    data.messages.forEach(function(message) {
+        var bubbleClass = message.sender === 'AI' ? 'bubble-right' : 'bubble-left';
+        var avatarSrc = message.sender === 'AI' ? '/static/assets/images/ic_403.png' : avatarUrl;
+        var avatarContainerClass = message.sender === 'AI' ? 'avatar-container-right' : 'avatar-container-left';
+
+        var html = `
+            <div class="chat-message">
+                <div class="${avatarContainerClass}">
+                    <img src="${avatarSrc}" class="avatar"> <!-- 使用 avatarSrc -->
+                </div>
+                <div class="bubble ${bubbleClass}">
+                    <div class="bubble-content">
+                        ${message.message_text}
+                    </div>
+                </div>
+            </div>
+        `;
+        chatContainer.innerHTML += html;
+    });
+}
+
+
