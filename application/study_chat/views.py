@@ -13,6 +13,7 @@ from application.user.models import User
 from utils import R
 import json
 from utils.utils import getImageURL
+from config.env import IMAGE_URL
 # 角色首页
 @method_decorator(check_login, name='get')
 class ChatIndexView(PermissionRequired, View):
@@ -27,7 +28,7 @@ class ChatIndexView(PermissionRequired, View):
         userInfo = User.objects.filter(is_delete=False, id=user_id).first()
         userInfo.avatar = getImageURL(userInfo.avatar)
         # 渲染HTML模板
-        return render(request, "study_chat/index.html",{'content': content,'userInfo':userInfo})
+        return render(request, "study_chat/index.html",{'content': content,'userInfo':userInfo,"NGINX_URL":IMAGE_URL})
 
 
 

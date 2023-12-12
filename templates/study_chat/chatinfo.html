@@ -5,30 +5,36 @@
     <link rel="stylesheet" href="{% static 'css/study_chat/chatinfo.css' %}">
 </head>
 <body>
-    <div id="userInfo" style="display:none;" data-avatar="{{ userInfo.avatar | default:'/static/assets/images/ic_403.png' }}"></div>
-    <div id="chat-container"></div>
-    {#    左边气泡框   #}
-{#    <div class="chat-message">#}
-{#        <div class="avatar-container-left">#}
-{#            <img src="{% static 'assets/images/ic_403.png' %}"  class="avatar">#}
-{#        </div>#}
-{#        <div class="bubble bubble-left">#}
-{#            <div class="bubble-content">#}
-{#                你好，这是一个漂亮的气泡消息框！--用户1第1句话#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-   {#    右边气泡框   #}
-{#    <div class="chat-message">#}
-{#        <div class="avatar-container-right">#}
-{#            <img src="{% static 'assets/images/ic_403.png' %}"  class="avatar">#}
-{#        </div>#}
-{#        <div class="bubble bubble-right">#}
-{#            <div class="bubble-content">#}
-{#                你好，这是一个漂亮的气泡消息框！--用户2第1句话#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-
+<div id="userInfo" style="display:none;"
+     data-avatar="{{ userInfo.avatar | default:'/static/assets/images/ic_403.png' }}"></div>
+<div id="chat-container"></div>
+<div id="myModal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="img01">
+    <div id="caption"></div>
+</div>
 </body>
+<script type="text/javascript">
+    var NGINX_URL = "{{ NGINX_URL }}";
+    // 获取模态窗口
+    var modal = document.getElementById('myModal');
+
+    // 获取模态窗口中的图片
+    var modalImg = document.getElementById('img01');
+
+    // 获取关闭按钮
+    var span = document.getElementsByClassName('close')[0];
+
+    // 点击图片打开模态窗口
+    function openModal(imgSrc) {
+        modal.style.display = "block";
+        modalImg.src = imgSrc;
+    }
+
+    // 点击关闭按钮关闭模态窗口
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+
+</script>
 </html>

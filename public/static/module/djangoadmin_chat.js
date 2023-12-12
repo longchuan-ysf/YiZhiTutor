@@ -138,6 +138,22 @@ function displayMessages(data) {
         var bubbleClass = message.sender === 'AI' ? 'bubble-right' : 'bubble-left';
         var avatarSrc = message.sender === 'AI' ? '/static/assets/images/ic_403.png' : avatarUrl;
         var avatarContainerClass = message.sender === 'AI' ? 'avatar-container-right' : 'avatar-container-left';
+         // 媒体内容的 HTML
+        var mediaHtml = '';
+        if(message.media_type) {
+            var mediaUrl = NGINX_URL + message.media_url;
+            console.log(mediaUrl)
+            if (message.media_type === 1) {
+                mediaHtml = `<audio controls>
+                            <source src="${mediaUrl}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                         </audio>`;
+            } else if (message.media_type === 2) {
+                // 图片
+                mediaHtml = `<img src="${mediaUrl}" alt="Chat Image" style="max-width: 100%;" onclick="openModal('${mediaUrl}')">`;
+                // mediaHtml = `<img src="${mediaUrl}" alt="Chat Image" style="max-width: 100%;">`;
+            }
+        }
 
         var html = `
             <div class="chat-message">
@@ -146,6 +162,7 @@ function displayMessages(data) {
                 </div>
                 <div class="bubble ${bubbleClass}">
                     <div class="bubble-content">
+                        ${mediaHtml} <!-- 媒体内容 -->
                         ${message.message_text}
                     </div>
                 </div>
