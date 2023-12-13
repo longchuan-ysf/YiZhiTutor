@@ -68,4 +68,18 @@
 
 
 
+/*点击加号动画*/
+/* CSS */
+.thematic-foot-add {
+  transition: transform 0.2s ease; /* 添加过渡动画 */
+  cursor: pointer; /* 将鼠标光标改变为指针，提供视觉反馈 */
+}
+
+.thematic-foot-add:active {
+  transform: scale(0.9); /* 当元素处于活动状态（即被点击时），缩小到原来的0.9倍大小 */
+}
+
+
+
+
 

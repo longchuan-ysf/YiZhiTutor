@@ -18,7 +18,6 @@
     </div>
     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 layui-col-lg12 layui-bg-cyan chat-thematic-content ">
         <ul class="layui-nav layui-nav-tree layui-inline layui-bg-cyan" lay-filter="thematic" style="width: 100%;">
-            <li class="layui-nav-item"><a href="javascript:;" onclick="startConversation()">新对话</a></li>
             {% for session in content.data %}
                 <li class="layui-nav-item">
                     <a href="javascript:;" onclick="sendRequest({{ session.session_id }})">{{ session.thematic }}</a>
@@ -30,7 +29,7 @@
         <div class="thematic-foot-date">
             <i class="layui-icon layui-icon-date" style="font-size: 30px; color: #1E9FFF;"></i>
         </div>
-        <div class="thematic-foot-add">
+        <div class="thematic-foot-add" onclick="startConversation()">
             <i class="layui-icon layui-icon-addition" style="font-size: 30px; color: #1E9FFF;"></i>
         </div>
     </div>

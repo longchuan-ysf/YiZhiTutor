@@ -9,6 +9,20 @@ import datetime
 from django.core.exceptions import ObjectDoesNotExist
 
 from utils import R, regular
+"""
+创建新的会话
+"""
+def create_new_chat_session(user_id):
+    try:
+        user = User.objects.get(pk=user_id)
+        chat_session = ChatSession(user=user)
+        chat_session.thematic = "新对话"
+        chat_session.save()
+        return chat_session
+
+    except ObjectDoesNotExist:
+        # 用户不存在
+        raise Exception("User not found.")
 
 """
 获取聊天记录get_chat_messages_as_json
@@ -26,15 +40,13 @@ def get_chat_messages_as_json(user_id, session_id):
         messages = ChatMessage.objects.filter(session_id=session_id, session__user_id=user_id).order_by('timestamp')
 
         # 用于识别特定格式消息的正则表达式
-        # pattern = r'\[这是\w+url放在([^\]]+)\]'
         pattern = r'\[这是\w+url放在([^\]]+)\](.*)'
         # 初始化响应数据结构
         response_data = {
-            "date": "",  # 会话日期
+            "date": chat_session.start_time.strftime("%Y-%m-%d"),  # 会话日期
             "thematic": chat_session.thematic,
             "messages": []
         }
-
         # 处理每条消息
         for message in messages:
             message_data = {
@@ -57,13 +69,9 @@ def get_chat_messages_as_json(user_id, session_id):
                     if media_record.media_type == 1 and match.group(2).strip():
                         audio_text = match.group(2).strip()
                         message_data["message_text"] = audio_text
-
-
             response_data["messages"].append(message_data)
 
-            # 更新会话日期
-            if not response_data["date"]:
-                response_data["date"] = message.timestamp.strftime("%Y-%m-%d")
+        # 更新会话日期
         print(response_data)
         return json.dumps({"status": True, "message": "Query successful.", "data": response_data},cls=DjangoJSONEncoder)
 

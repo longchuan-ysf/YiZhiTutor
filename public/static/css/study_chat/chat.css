@@ -57,3 +57,11 @@
     color: #1E9FFF;
 }
 
+.chat-form-submit {
+  transition: transform 0.3s ease; /* 添加过渡动画 */
+  cursor: pointer; /* 将鼠标光标改变为指针，提供视觉反馈 */
+}
+
+.chat-form-submit:active {
+  transform: scale(0.6); /* 当元素处于活动状态（即被点击时），缩小到原来的0.9倍大小 */
+}

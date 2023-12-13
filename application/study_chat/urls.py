@@ -7,8 +7,9 @@ urlpatterns = [
     # 获取角色菜单数据
     path('index', views.ChatIndexView.as_view()),
     # 用户提交对话
-    path('submit', views.ChatSubmitView.as_view()),
+    path('submit_txt', views.ChatSubmitTxtView.as_view()),
     # 用户切换对话主题
     path('thematic', views.ThematicChangeView.as_view()),
+    path('thematic_add', views.ThematicAddView.as_view()),
 
 ]

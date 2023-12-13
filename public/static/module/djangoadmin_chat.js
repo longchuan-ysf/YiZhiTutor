@@ -21,7 +21,7 @@ function adjustLayout() {
     var submitChatIcon = document.querySelector('.submit-icon');
     submitChatIcon.style.fontSize = (messageInputContainer_w * 0.07) + 'px'; //messageInputContainer_w
 
-     //------------------------主题窗口的大小调整 -----------------------------------//
+    //------------------------主题窗口的大小调整 -----------------------------------//
     var thematicParentHeight = document.querySelector('.chat-thematic').offsetHeight;
     document.querySelector('.chat-thematic-header').style.height = (thematicParentHeight * 0.08) + 'px';
     document.querySelector('.chat-thematic-content').style.height = (thematicParentHeight * 0.80) + 'px';
@@ -31,6 +31,7 @@ function adjustLayout() {
 
 
 }
+
 function setThematicFontSize() {
     // 计算并设置头部字体大小
     var thematicHeader = document.querySelector('.chat-thematic-header');
@@ -46,7 +47,7 @@ function setThematicFontSize() {
         var contentWidth = thematicContent.offsetWidth;
         var links = thematicContent.querySelectorAll('.layui-nav-item a');
         var contentFontSize = contentWidth * 0.06; // 示例：字体大小为宽度的0.03%
-        links.forEach(function(link) {
+        links.forEach(function (link) {
             link.style.fontSize = contentFontSize + 'px';
         });
     }
@@ -54,55 +55,17 @@ function setThematicFontSize() {
 
 window.onload = adjustLayout;
 window.onresize = adjustLayout;
-
-layui.use("form", function () {
-    var form = layui.form;
-
-    form.on('submit(demo1)', function (data) {
-        var formElement = document.querySelector('.layui-form');
-        console.log('提交地址:', formElement.action);
-        console.log('提交方法:', formElement.method);
-        console.log("提交的内容:", JSON.stringify(data.field))
-        // 阻止表单的默认提交行为
-        event.preventDefault();
-
-        // Ajax 请求
-        $.ajax({
-            url: data.form.action,  // 提交地址
-            method: data.form.method,  // 提交方法
-            data: data.field,  // 表单数据
-            success: function(response) {
-                // 根据返回的code判断操作是否成功
-                if(response.code === 0) {
-                    console.log("操作成功");
-                    // 可以在这里更新页面内容或显示成功消息
-                } else {
-                    console.log("操作失败");
-                    // 显示错误信息或处理失败情况
-                }
-            },
-            error: function(xhr, status, error) {
-                // 处理请求错误
-                console.error('提交失败:', error);
-            }
-        });
-
-        return false;  // 防止表单的默认提交行为
-    });
-
-});
-
-function startConversation() {
-    // 开始对话的逻辑
-}
+//点击做侧边栏的每个对话主题，向后台索取所有聊天信息
+var currentSessionId = null;
 
 function sendRequest(sessionId) {
+    currentSessionId = sessionId;//存储当前的会话ID
     $.ajax({
         url: '/chat/thematic', // 替换为您的服务器端点
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({ session_id: sessionId }),
-        success: function(response) {
+        data: JSON.stringify({session_id: sessionId}),
+        success: function (response) {
             // var data = JSON.parse(response.data);
             var data;
             if (typeof response.data === 'string') {
@@ -122,25 +85,26 @@ function sendRequest(sessionId) {
                 console.error('Data does not contain messages');
             }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             // 这里处理错误情况
             console.error('Error:', error);
         }
     });
 }
 
+//显示聊天信息
 function displayMessages(data) {
     var chatContainer = document.getElementById('chat-container');
     chatContainer.innerHTML = ''; // 清空现有内容
     var userInfo = document.getElementById('userInfo');
     var avatarUrl = userInfo.getAttribute('data-avatar'); // 获取头像 URL
-    data.messages.forEach(function(message) {
+    data.messages.forEach(function (message) {
         var bubbleClass = message.sender === 'AI' ? 'bubble-right' : 'bubble-left';
         var avatarSrc = message.sender === 'AI' ? '/static/assets/images/ic_403.png' : avatarUrl;
         var avatarContainerClass = message.sender === 'AI' ? 'avatar-container-right' : 'avatar-container-left';
-         // 媒体内容的 HTML
+        // 媒体内容的 HTML
         var mediaHtml = '';
-        if(message.media_type) {
+        if (message.media_type) {
             var mediaUrl = NGINX_URL + message.media_url;
             console.log(mediaUrl)
             if (message.media_type === 1) {
@@ -172,4 +136,156 @@ function displayMessages(data) {
     });
 }
 
+//将新加的对话主题添加到左侧栏显示
+function addNewSessionToUI(sessionId) {
+    var sessionsList = document.querySelector('.layui-nav-tree'); // 获取会话列表的UL元素
+    var newSession = document.createElement('li'); // 创建一个新的LI元素
+    newSession.className = 'layui-nav-item'; // 设置类名
+    var sessionLink = document.createElement('a'); // 创建链接元素
+    sessionLink.href = 'javascript:;';
+    sessionLink.textContent = '新对话 '; // 这里可以设置为会话的实际名称或主题
+    sessionLink.onclick = function () {
+        sendRequest(sessionId);
+    }; // 设置点击事件
+    newSession.appendChild(sessionLink); // 把链接加到LI元素上
+    // 将新会话插入到列表的最前面
+    if (sessionsList.firstChild) {
+        sessionsList.insertBefore(newSession, sessionsList.firstChild);
+    } else {
+        sessionsList.appendChild(newSession); // 如果列表为空，直接添加
+    }
 
+    setThematicFontSize();
+    layui.use('element', function () {
+        var element = layui.element;
+
+        // 重新渲染导航栏
+        element.render('nav', 'thematic');
+    });
+}
+
+var isCreatingSession = false;
+var hasActiveSession = false; // 新增变量跟踪是否有活跃会话
+//点击加号,新加对话主题
+function startConversation() {
+    if (isCreatingSession || hasActiveSession) {
+        // 如果正在创建会话或已有活跃会话，不执行操作
+        console.log('Please use the active session or wait for the current process to finish.');
+        return;
+    }
+    console.log("startConversation")
+    isCreatingSession = true;
+    // 显示加载动画或其他指示器给用户
+
+    $.ajax({
+        url: '/chat/thematic_add',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({info: '新建会话'}),
+        success: function (response) {
+            var sessionId = response.session_id;
+            console.log(response)
+            console.log("sessionId = ", sessionId)
+            addNewSessionToUI(sessionId);
+            hasActiveSession = true; // 标记为有活跃会话
+            // 更新界面，如禁用新对话按钮
+        },
+        error: function (xhr, status, error) {
+            console.error('Error creating new conversation:', error);
+        },
+        complete: function () {
+            isCreatingSession = false;
+        }
+    });
+}
+
+//form表单向后台提交用户对话数据
+layui.use("form", function () {
+    var form = layui.form;
+
+    form.on('submit(submitChat)', function (data) {
+        var formElement = document.querySelector('.layui-form');
+        console.log('提交地址:', formElement.action);
+        console.log('提交方法:', formElement.method);
+        console.log("提交的内容:", JSON.stringify(data.field))
+        // 阻止表单的默认提交行为
+        event.preventDefault();
+        // 检查 chat-text 是否为空
+        if (!data.field['chat-text'] || data.field['chat-text'].trim() === '') {
+            console.log('chat-text 为空，不提交到后台');
+            event.preventDefault();
+            return false;
+        }
+        // Ajax 请求
+        $.ajax({
+            url: data.form.action,  // 提交地址
+            method: data.form.method,  // 提交方法
+            data: JSON.stringify({
+                'chat-text': document.getElementById('chat-text').value,
+                'session_id': currentSessionId  // 包含 session_id
+            }),  // 表单数据
+            contentType: 'application/json',
+            success: function (response) {
+                // 根据返回的code判断操作是否成功
+                if (response.code === 0) {
+                    console.log("操作成功");
+                    document.getElementById('chat-text').value = '';
+                    addMessageToChat(response.data);
+                } else {
+                    console.log("操作失败");
+                    // 显示错误信息或处理失败情况
+                }
+            },
+            error: function (xhr, status, error) {
+                // 处理请求错误
+                console.error('提交失败:', error);
+            },
+            complete: function () {
+                hasActiveSession = false; // 消息发送后，允许创建新会话
+            }
+        });
+        return false;  // 防止表单的默认提交行为
+    });
+});
+
+function addMessageToChat(message) {
+    var chatContainer = document.getElementById('chat-container');
+    var avatarUrl = document.getElementById('userInfo').getAttribute('data-avatar');
+
+    var bubbleClass = message.sender === 'AI' ? 'bubble-right' : 'bubble-left';
+    var avatarSrc = message.sender === 'AI' ? '/static/assets/images/ic_403.png' : avatarUrl;
+    var avatarContainerClass = message.sender === 'AI' ? 'avatar-container-right' : 'avatar-container-left';
+
+    var mediaHtml = '';
+    if (message.media_type) {
+        var mediaUrl = NGINX_URL + message.media_url;
+        console.log(mediaUrl)
+        if (message.media_type === 1) {
+            mediaHtml = `<audio controls>
+                            <source src="${mediaUrl}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                         </audio>`;
+        } else if (message.media_type === 2) {
+            // 图片
+            mediaHtml = `<img src="${mediaUrl}" alt="Chat Image" style="max-width: 100%;" onclick="openModal('${mediaUrl}')">`;
+            // mediaHtml = `<img src="${mediaUrl}" alt="Chat Image" style="max-width: 100%;">`;
+        }
+    }
+
+    var html = `
+        <div class="chat-message">
+            <div class="${avatarContainerClass}">
+                <img src="${avatarSrc}" class="avatar">
+            </div>
+            <div class="bubble ${bubbleClass}">
+                <div class="bubble-content">
+                    ${mediaHtml} <!-- 媒体内容 -->
+                    ${message.message_text}
+                </div>
+            </div>
+        </div>
+    `;
+
+    chatContainer.innerHTML += html;
+    chatContainer.scrollTop = chatContainer.scrollHeight; // 滚动到最新消息
+}

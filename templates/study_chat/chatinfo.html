@@ -5,14 +5,15 @@
     <link rel="stylesheet" href="{% static 'css/study_chat/chatinfo.css' %}">
 </head>
 <body>
-<div id="userInfo" style="display:none;"
-     data-avatar="{{ userInfo.avatar | default:'/static/assets/images/ic_403.png' }}"></div>
-<div id="chat-container"></div>
-<div id="myModal" class="modal">
-    <span class="close">&times;</span>
-    <img class="modal-content" id="img01">
-    <div id="caption"></div>
-</div>
+    <div id="userInfo" style="display:none;"
+         data-avatar="{{ userInfo.avatar | default:'/static/assets/images/ic_403.png' }}">
+    </div>
+    <div id="chat-container"></div>
+    <div id="myModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="img01">
+        <div id="caption"></div>
+    </div>
 </body>
 <script type="text/javascript">
     var NGINX_URL = "{{ NGINX_URL }}";
