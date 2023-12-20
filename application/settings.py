@@ -39,6 +39,7 @@ ALLOWED_HOSTS = ['*']
 # 设置项是否开启URL访问地址后面不为/跳转至带有/的路径
 APPEND_SLASH = True
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -91,8 +92,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
-
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # 此配置用于解决弹窗被浏览器劫持问题
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
@@ -169,14 +171,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'application.wsgi.application'
 
+ASGI_APPLICATION = 'application.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
+
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
     "default": {
         "ENGINE": env.DATABASE_ENGINE,
         "NAME": env.DATABASE_NAME,
@@ -225,7 +231,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "public/static"),
 ]
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 

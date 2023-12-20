@@ -6,7 +6,8 @@
 </head>
 <body>
     <div id="userInfo" style="display:none;"
-         data-avatar="{{ userInfo.avatar | default:'/static/assets/images/ic_403.png' }}">
+         data-avatar="{{ userInfo.avatar | default:'/static/assets/images/ic_403.png' }}"
+         data-userid="{{ userInfo.id }}">
     </div>
     <div id="chat-container"></div>
     <div id="myModal" class="modal">

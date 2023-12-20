@@ -26,9 +26,8 @@ function adjustLayout() {
     document.querySelector('.chat-thematic-header').style.height = (thematicParentHeight * 0.08) + 'px';
     document.querySelector('.chat-thematic-content').style.height = (thematicParentHeight * 0.80) + 'px';
 
-    // 动态设置字体大小
+    // 动态设置主题栏的字体大小
     setThematicFontSize();
-
 
 }
 
@@ -53,13 +52,21 @@ function setThematicFontSize() {
     }
 }
 
-window.onload = adjustLayout;
+window.onload = function () {
+    adjustLayout(); // 你的布局调整函数
+
+};
+
+// window.onload = adjustLayout;
 window.onresize = adjustLayout;
 //点击做侧边栏的每个对话主题，向后台索取所有聊天信息
+
+
 var currentSessionId = null;
 
 function sendRequest(sessionId) {
     currentSessionId = sessionId;//存储当前的会话ID
+    console.log("sendRequest called with sessionId:", sessionId);
     $.ajax({
         url: '/chat/thematic', // 替换为您的服务器端点
         type: 'POST',
@@ -133,6 +140,8 @@ function displayMessages(data) {
             </div>
         `;
         chatContainer.innerHTML += html;
+        var chatContent = document.querySelector('.chat-content');
+        chatContent.scrollTop = chatContent.scrollHeight;
     });
 }
 
@@ -199,15 +208,13 @@ function startConversation() {
     });
 }
 
-//form表单向后台提交用户对话数据
+//form表单向后台提交用户对话数据——后续被我换成websocket了，但是不想动页面布局，就沿用这个表单提交
 layui.use("form", function () {
     var form = layui.form;
 
     form.on('submit(submitChat)', function (data) {
-        var formElement = document.querySelector('.layui-form');
-        console.log('提交地址:', formElement.action);
-        console.log('提交方法:', formElement.method);
-        console.log("提交的内容:", JSON.stringify(data.field))
+        var userInfo = document.getElementById('userInfo');
+        var userID = userInfo.getAttribute('data-userid'); // 获取用户id
         // 阻止表单的默认提交行为
         event.preventDefault();
         // 检查 chat-text 是否为空
@@ -216,40 +223,20 @@ layui.use("form", function () {
             event.preventDefault();
             return false;
         }
-        // Ajax 请求
-        $.ajax({
-            url: data.form.action,  // 提交地址
-            method: data.form.method,  // 提交方法
-            data: JSON.stringify({
-                'chat-text': document.getElementById('chat-text').value,
-                'session_id': currentSessionId  // 包含 session_id
-            }),  // 表单数据
-            contentType: 'application/json',
-            success: function (response) {
-                // 根据返回的code判断操作是否成功
-                if (response.code === 0) {
-                    console.log("操作成功");
-                    document.getElementById('chat-text').value = '';
-                    addMessageToChat(response.data);
-                } else {
-                    console.log("操作失败");
-                    // 显示错误信息或处理失败情况
-                }
-            },
-            error: function (xhr, status, error) {
-                // 处理请求错误
-                console.error('提交失败:', error);
-            },
-            complete: function () {
-                hasActiveSession = false; // 消息发送后，允许创建新会话
-            }
-        });
+        //websocket发送请求
+        socket.send(JSON.stringify({
+            'chat-text': document.getElementById('chat-text').value,
+            'session_id': currentSessionId,  // 包含 session_id
+            'user_id': userID
+        }));
+        document.getElementById('chat-text').value = '';
         return false;  // 防止表单的默认提交行为
     });
 });
 
 function addMessageToChat(message) {
     var chatContainer = document.getElementById('chat-container');
+    var chatContent = document.querySelector('.chat-content');
     var avatarUrl = document.getElementById('userInfo').getAttribute('data-avatar');
 
     var bubbleClass = message.sender === 'AI' ? 'bubble-right' : 'bubble-left';
@@ -287,5 +274,73 @@ function addMessageToChat(message) {
     `;
 
     chatContainer.innerHTML += html;
-    chatContainer.scrollTop = chatContainer.scrollHeight; // 滚动到最新消息
+    chatContent.scrollTop = chatContent.scrollHeight;
 }
+
+let socket = new WebSocket("ws://localhost:8000/chat/respon/");
+
+socket.onopen = function (e) {
+    console.log("[open] Connection established");
+};
+
+
+var tempBubble; // 用于临时存储AI回答的气泡
+var tempText;
+socket.onmessage = function (event) {
+    var message = JSON.parse(event.data);
+    if (message && message.code === 0) {
+        if (message.msg === "save confirmation") {
+            addMessageToChat(message.data);
+            hasActiveSession = false;
+        } else if (message.msg === "ai response") {
+            switch (message.data.message_start_end) {
+                case "start":
+                    tempBubble = createAIBubble();
+                    tempText = ''
+                    break;
+                case "message":
+                    tempText = tempText + message.data.message;
+                    updateAIBubble(tempBubble, tempText );
+                    break;
+                case "end":
+                    finalizeAIBubble(tempBubble);
+                    tempText = null;
+                    tempBubble = null;
+                    break;
+            }
+        } else {
+            console.error("Unexpected message type or error from server");
+        }
+    }
+};
+
+socket.onerror = function (error) {
+    console.error(`[error] ${error.message}`);
+};
+
+function createAIBubble() {
+    var chatContainer = document.getElementById('chat-container');
+    var bubble = document.createElement('div');
+    bubble.className = "chat-message";
+    chatContainer.appendChild(bubble);
+    return bubble;
+}
+
+function updateAIBubble(bubble, text) {
+    bubble.innerHTML = `
+        <div class="avatar-container-right">
+            <img src="/static/assets/images/ic_403.png" class="avatar">
+        </div>
+        <div class="bubble bubble-right">
+            <div class="bubble-content">${text}</div>
+        </div>
+    `;
+    var chatContent = document.querySelector('.chat-content');
+    chatContent.scrollTop = chatContent.scrollHeight;
+}
+
+function finalizeAIBubble(bubble) {
+    var chatContent = document.querySelector('.chat-content');
+    chatContent.scrollTop = chatContent.scrollHeight;
+}
+

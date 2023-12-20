@@ -12,4 +12,5 @@ urlpatterns = [
     path('thematic', views.ThematicChangeView.as_view()),
     path('thematic_add', views.ThematicAddView.as_view()),
 
+
 ]

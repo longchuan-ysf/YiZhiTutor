@@ -3,6 +3,7 @@
 <head>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/study_chat/thematic.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <div class="layui-row chat-thematic">
@@ -18,9 +19,9 @@
     </div>
     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 layui-col-lg12 layui-bg-cyan chat-thematic-content ">
         <ul class="layui-nav layui-nav-tree layui-inline layui-bg-cyan" lay-filter="thematic" style="width: 100%;">
-            {% for session in content.data %}
-                <li class="layui-nav-item">
-                    <a href="javascript:;" onclick="sendRequest({{ session.session_id }})">{{ session.thematic }}</a>
+            {% for session in content.data  %}
+                <li class="layui-nav-item {% if forloop.first %}layui-this{% endif %}" >
+                    <a href="javascript:;"  onclick="sendRequest({{ session.session_id }})">{{ session.thematic }}</a>
                 </li>
             {% endfor %}
         </ul>
@@ -35,4 +36,35 @@
     </div>
 </div>
 </body>
+
+<script>
+
+    $(document).ready(function() {
+        // 确保 Layui 元素已渲染
+        layui.use('element', function(){
+            var element = layui.element;
+            console.log("click")
+            // 触发第一个导航项的点击事件
+            $(".layui-nav-item:first-child a").click();
+        });
+    });
+    layui.use(['jquery', 'element'], function(){
+        var $ = layui.jquery;
+        var element = layui.element;
+
+        // 绑定点击事件到所有导航项
+        $('.layui-nav-item a').on('click', function(){
+            // 移除所有导航项的 layui-this 类
+            $('.layui-nav-item').removeClass('layui-this');
+
+            // 将 layui-this 类添加到被点击的导航项
+            $(this).parent('.layui-nav-item').addClass('layui-this');
+        });
+
+        // 初始时触发第一个导航项的点击事件
+        $(".layui-nav-item:first-child a").click();
+    });
+
+
+</script>
 </html>
