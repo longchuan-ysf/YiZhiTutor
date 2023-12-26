@@ -43,7 +43,7 @@ class ChatSubmitTxtView(PermissionRequired, View):
         try:
             # 解析请求体中的 JSON 数据
             data = json.loads(request.body)
-            print(data)
+            print("ChatSubmitTxtView",data)
             # 假设请求体中包含了 'message_text' 和 'session_id'
             message_text = data.get('chat-text')
             session_id = data.get('session_id')

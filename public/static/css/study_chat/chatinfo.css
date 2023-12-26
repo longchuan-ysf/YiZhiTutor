@@ -10,6 +10,7 @@
 
 .bubble-content {
     color: #333;
+    white-space: pre-wrap;
 }
 
 /* 用户1的消息样式 */

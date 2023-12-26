@@ -35,6 +35,17 @@ class ChatMessage(models.Model):
     def __str__(self):
         return f"Message {self.id} - Session {self.session.id}"
 
+class ChatSummary(models.Model):
+    session = models.ForeignKey(ChatSession, related_name='summaries', on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+
+    class Meta:
+        db_table = TABLE_PREFIX + 'Chat_Summary'
+        verbose_name = '会话摘要表'
+
+    def __str__(self):
+        return f"Summary {self.id} - Session {self.session.id}"
 
 class MediaRecord(models.Model):
     # 使用ForeignKey一对多的依据：每个媒体记录属于一条消息但是一条消息可以包含一个或多个媒体记录

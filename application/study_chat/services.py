@@ -3,15 +3,18 @@ import logging
 import re
 import json
 from django.core.serializers.json import DjangoJSONEncoder
-from application.study_chat.models import ChatSession, ChatMessage, MediaRecord  # 替换为您的实际模型路径
+from application.study_chat.models import ChatSession, ChatMessage, MediaRecord, ChatSummary  # 替换为您的实际模型路径
 from application.user.models import User
 import datetime
 from django.core.exceptions import ObjectDoesNotExist
 
 from utils import R, regular
+
 """
 创建新的会话
 """
+
+
 def create_new_chat_session(user_id):
     try:
         user = User.objects.get(pk=user_id)
@@ -23,6 +26,7 @@ def create_new_chat_session(user_id):
     except ObjectDoesNotExist:
         # 用户不存在
         raise Exception("User not found.")
+
 
 """
 获取聊天记录get_chat_messages_as_json
@@ -39,13 +43,20 @@ def get_chat_messages_as_json(user_id, session_id):
         # 获取指定会话的所有消息
         messages = ChatMessage.objects.filter(session_id=session_id, session__user_id=user_id).order_by('timestamp')
 
+        summaries = ChatSummary.objects.filter(session_id=session_id)
         # 用于识别特定格式消息的正则表达式
         pattern = r'\[这是\w+url放在([^\]]+)\](.*)'
         # 初始化响应数据结构
         response_data = {
             "date": chat_session.start_time.strftime("%Y-%m-%d"),  # 会话日期
             "thematic": chat_session.thematic,
-            "messages": []
+            "summary": [
+                {
+                    "title": f"{index + 1}、{summary.title}",
+                    "content": summary.content
+                } for index, summary in enumerate(summaries)
+            ],
+            "messages": [],
         }
         # 处理每条消息
         for message in messages:
@@ -72,21 +83,22 @@ def get_chat_messages_as_json(user_id, session_id):
             response_data["messages"].append(message_data)
 
         # 更新会话日期
-        print(response_data)
-        return json.dumps({"status": True, "message": "Query successful.", "data": response_data},cls=DjangoJSONEncoder)
+        # print(response_data)
+        return json.dumps({"status": True, "message": "Query successful.", "data": response_data},
+                          cls=DjangoJSONEncoder)
 
     except ObjectDoesNotExist:
         return json.dumps({
             "status": False,
             "message": "Chat session not found or user not associated with session.",
             "data": {}
-        },cls=DjangoJSONEncoder)
+        }, cls=DjangoJSONEncoder)
     except Exception as e:
         return json.dumps({
             "status": False,
             "message": f"An error occurred: {str(e)}",
             "data": {}
-        },cls=DjangoJSONEncoder)
+        }, cls=DjangoJSONEncoder)
 
 
 """

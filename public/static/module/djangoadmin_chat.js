@@ -29,35 +29,39 @@ function adjustLayout() {
     // 动态设置主题栏的字体大小
     setThematicFontSize();
 
+
 }
 
 function setThematicFontSize() {
     // 计算并设置头部字体大小
     var thematicHeader = document.querySelector('.chat-thematic-header');
     if (thematicHeader) {
-        var headerWidth = thematicHeader.offsetWidth;
-        var headerFontSize = headerWidth * 0.08; // 字体大小为宽度的0.8%
+        var headerHeight = thematicHeader.offsetHeight;
+        var headerFontSize = headerHeight * 0.30; // 字体大小为宽度的0.8%
         thematicHeader.style.fontSize = headerFontSize + 'px';
     }
 
     // 计算并设置内容字体大小
     var thematicContent = document.querySelector('.chat-thematic-content');
     if (thematicContent) {
-        var contentWidth = thematicContent.offsetWidth;
-        var links = thematicContent.querySelectorAll('.layui-nav-item a');
-        var contentFontSize = contentWidth * 0.06; // 示例：字体大小为宽度的0.03%
-        links.forEach(function (link) {
-            link.style.fontSize = contentFontSize + 'px';
+        // 获取所有的layui-nav-item类的元素
+        var items = thematicContent.querySelectorAll('.layui-nav-item');
+        items.forEach(function (item) {
+            // 获取每个<li>元素的高度
+            var itemHeight = item.offsetHeight;
+            // 计算字体大小为高度的50%
+            var fontSize = itemHeight * 0.25;
+            // 设置该<li>内的<a>元素的字体大小
+            var link = item.querySelector('a');
+            if (link) {
+                link.style.fontSize = fontSize + 'px';
+            }
         });
     }
 }
 
-window.onload = function () {
-    adjustLayout(); // 你的布局调整函数
 
-};
-
-// window.onload = adjustLayout;
+window.onload = adjustLayout; // 你的布局调整函数
 window.onresize = adjustLayout;
 //点击做侧边栏的每个对话主题，向后台索取所有聊天信息
 
@@ -86,8 +90,9 @@ function sendRequest(sessionId) {
             console.log("Processed data:", data);
 
             // 检查 data 对象是否包含 messages 属性
-            if (data && data.data && data.data.messages) {
-                displayMessages(data.data);
+            if (data && data.data) {
+                displayMessages(data.data.messages);
+                updateSummary(data.data.summary);
             } else {
                 console.error('Data does not contain messages');
             }
@@ -99,14 +104,51 @@ function sendRequest(sessionId) {
     });
 }
 
+function updateSummary(summary) {
+    var container = $('.container'); // 获取容器
+    container.empty(); // 清空现有内容
+
+    // 遍历summary数组，为每个项创建HTML元素
+    summary.forEach(function (item, index) {
+        var panelClass = index === 0 ? 'panel active' : 'panel';
+        var panel = $('<div class="' + panelClass + '">');
+        panel.append('<div class="title-describe">' + item.title + '</div>');
+        panel.append('<div class="content-describe">' + item.content + '</div>');
+        container.append(panel); // 将新的panel添加到容器中
+    });
+
+    // 在添加新内容后重新绑定事件
+    bindPanelClickEvents();
+}
+
+// 重新绑定点击事件到所有.panel元素
+function bindPanelClickEvents() {
+    const panels = document.querySelectorAll('.panel');
+    panels.forEach((panel) => {
+        panel.addEventListener('click', () => {
+            removeActiveClasses(panels);
+            panel.classList.add('active');
+            console.log("click panel");
+        });
+    });
+}
+
+// 去除所有.panel元素的'active'类
+function removeActiveClasses(panels) {
+    panels.forEach((panel) => {
+        panel.classList.remove('active');
+    });
+}
+
 //显示聊天信息
-function displayMessages(data) {
+function displayMessages(messages) {
     var chatContainer = document.getElementById('chat-container');
     chatContainer.innerHTML = ''; // 清空现有内容
     var userInfo = document.getElementById('userInfo');
     var avatarUrl = userInfo.getAttribute('data-avatar'); // 获取头像 URL
-    data.messages.forEach(function (message) {
+    messages.forEach(function (message) {
         var bubbleClass = message.sender === 'AI' ? 'bubble-right' : 'bubble-left';
+
         var avatarSrc = message.sender === 'AI' ? '/static/assets/images/ic_403.png' : avatarUrl;
         var avatarContainerClass = message.sender === 'AI' ? 'avatar-container-right' : 'avatar-container-left';
         // 媒体内容的 HTML
@@ -125,17 +167,13 @@ function displayMessages(data) {
                 // mediaHtml = `<img src="${mediaUrl}" alt="Chat Image" style="max-width: 100%;">`;
             }
         }
-
         var html = `
             <div class="chat-message">
                 <div class="${avatarContainerClass}">
                     <img src="${avatarSrc}" class="avatar"> <!-- 使用 avatarSrc -->
                 </div>
                 <div class="bubble ${bubbleClass}">
-                    <div class="bubble-content">
-                        ${mediaHtml} <!-- 媒体内容 -->
-                        ${message.message_text}
-                    </div>
+                    <div class="bubble-content">${mediaHtml}${message.message_text}</div>
                 </div>
             </div>
         `;
@@ -255,7 +293,6 @@ function addMessageToChat(message) {
         } else if (message.media_type === 2) {
             // 图片
             mediaHtml = `<img src="${mediaUrl}" alt="Chat Image" style="max-width: 100%;" onclick="openModal('${mediaUrl}')">`;
-            // mediaHtml = `<img src="${mediaUrl}" alt="Chat Image" style="max-width: 100%;">`;
         }
     }
 
@@ -265,10 +302,7 @@ function addMessageToChat(message) {
                 <img src="${avatarSrc}" class="avatar">
             </div>
             <div class="bubble ${bubbleClass}">
-                <div class="bubble-content">
-                    ${mediaHtml} <!-- 媒体内容 -->
-                    ${message.message_text}
-                </div>
+                <div class="bubble-content">${mediaHtml}${message.message_text}</div>
             </div>
         </div>
     `;
@@ -300,13 +334,28 @@ socket.onmessage = function (event) {
                     break;
                 case "message":
                     tempText = tempText + message.data.message;
-                    updateAIBubble(tempBubble, tempText );
+                    updateAIBubble(tempBubble, tempText);
                     break;
                 case "end":
                     finalizeAIBubble(tempBubble);
                     tempText = null;
                     tempBubble = null;
                     break;
+            }
+        } else if (message.msg === "thematic change") {
+            console.log(message.data)
+            var newThematic = message.data.newThematic;
+            var sessionId = message.data.sessionId;
+
+            // 检查是否是当前活跃的会话
+            if (sessionId === currentSessionId) {
+                // 找到对应的会话链接并更新主题
+                var sessionLinks = document.querySelectorAll('.chat-thematic-content a');
+                sessionLinks.forEach(function (link) {
+                    if (link.getAttribute('onclick').includes(sessionId)) {
+                        link.textContent = newThematic;
+                    }
+                });
             }
         } else {
             console.error("Unexpected message type or error from server");
@@ -343,4 +392,28 @@ function finalizeAIBubble(bubble) {
     var chatContent = document.querySelector('.chat-content');
     chatContent.scrollTop = chatContent.scrollHeight;
 }
+
+/*
+// 选中所有的panel
+const panels = document.querySelectorAll('.panel')
+// querySelectorAll选中的形式是一串数组，所以我们后面使用foeEach
+panels.forEach((panel) => {
+    // 点击事件
+    panel.addEventListener('click', () => {
+        // 清除其他的class上的active,这里一定要放在增加之前，不然会导致所有的都展开
+        removeActiveClasses()
+        // 给被点击的class增加active，这样它就有了active属性，也就会被展开，根据css里面的flex改成了5
+        panel.classList.add('active')
+        console.log("click panel")
+    })
+})
+
+// 该方法用于去除active
+function removeActiveClasses() {
+    panels.forEach((panel) => {
+        panel.classList.remove('active')
+    })
+}
+
+*/
 

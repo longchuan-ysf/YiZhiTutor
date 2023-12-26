@@ -2,6 +2,8 @@ import os
 from openai import OpenAI, AsyncOpenAI
 from application.study_chat import services
 import json
+import re
+from asgiref.sync import sync_to_async
 
 
 def get_chat_history(user_id, session_id):
@@ -22,7 +24,7 @@ def get_chat_history(user_id, session_id):
 
 
 async def get_gpt_response(history, user_input, websocket=None, max_tokens=1024):
-    api_key = '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'
+    api_key = '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'
     client = AsyncOpenAI(api_key=api_key)  # 使用异步客户端
 
     # 添加当前用户输入到历史
@@ -75,3 +77,77 @@ async def get_gpt_response(history, user_input, websocket=None, max_tokens=1024)
     history.append({"role": "assistant", "content": response})
 
     return response, history
+
+
+async def get_thimatic(historys, session, websocket=None):
+    api_key = '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'
+    client = AsyncOpenAI(api_key=api_key)  # 使用异步客户端
+    text = "帮我给这段对话起个标题,不超过8个字。回复的格式严格固定为：标题：XXXXX\n\n"
+    pattern = r"标题.*?：(.+)"
+    # 将每个字典格式化为指定的字符串格式
+    formatted_strings = ['"role": "{}",\n"content":"{}"'.format(history["role"], history["content"]) for history in
+                         historys]
+    # 将格式化的字符串用逗号连接
+    resulting_string = ",\n".join(formatted_strings)
+    text = text + resulting_string
+
+    chat_completion = await client.chat.completions.create(
+        messages=[
+            {
+                "role": "user",
+                "content": text,
+            }
+        ],
+        model="gpt-3.5-turbo",
+    )
+    title = chat_completion.choices[0].message.content
+    print(title)
+    # 尝试匹配特定的"标题"模式
+    match = re.search(pattern, title)
+    if match:
+        # 提取并清理标题
+        found_title = match.group(1).strip()
+    else:
+        # 如果没有匹配到特定模式，将整个响应作为标题
+        found_title = title.strip()
+
+    print("找到标题:", found_title)
+    # 基本响应格式，包含code、msg、response_type、data
+    response_data = {
+        "code": 0,
+        "msg": "thematic change",
+        "response_type": "json",
+        "data": {
+            'newThematic': found_title,
+            'sessionId': session.id
+        }
+    }
+    if websocket:
+        await websocket.send(text_data=json.dumps(response_data))
+
+    session.thematic = found_title
+    await sync_to_async(session.save)()
+
+
+async def get_highlight(historys, session):
+    api_key = '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'
+    client = AsyncOpenAI(api_key=api_key)  # 使用异步客户端
+    text = '提取这段对话的小学知识重点，回答的格式为：重点为1、xxxxx,2、xxxxx",3、xxxxx\n\n'
+    # 将每个字典格式化为指定的字符串格式
+    formatted_strings = ['"role": "{}",\n"content":"{}"'.format(history["role"], history["content"]) for history in
+                         historys]
+    # 将格式化的字符串用逗号连接
+    resulting_string = ",\n".join(formatted_strings)
+    text = text + resulting_string
+
+    chat_completion = await client.chat.completions.create(
+        messages=[
+            {
+                "role": "user",
+                "content": text,
+            }
+        ],
+        model="gpt-3.5-turbo",
+    )
+    highlight = chat_completion.choices[0].message.content
+    print(highlight)

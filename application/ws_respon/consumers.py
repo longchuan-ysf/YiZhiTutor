@@ -18,7 +18,7 @@ class MyConsumer(AsyncWebsocketConsumer):
             message_text = data.get('chat-text')
             session_id = data.get('session_id')
             user_id = data.get('user_id')
-
+            # ----------------------保存用户问题------------------------------------
             # 使用 sync_to_async 包装同步的 ORM 调用
             session = await sync_to_async(ChatSession.objects.get)(id=session_id)
             userInfo = await sync_to_async(User.objects.filter(is_delete=False, id=user_id).first)()
@@ -46,6 +46,7 @@ class MyConsumer(AsyncWebsocketConsumer):
             }
             await self.send(text_data=json.dumps(response_data))
 
+            # ----------------------通过GPT回答用户问题------------------------------------
             chat_history = await sync_to_async(GPT_generate.get_chat_history)(user_id, session_id)
 
             gpt_response, chat_history = await GPT_generate.get_gpt_response(chat_history, message_text, websocket=self)
@@ -54,6 +55,10 @@ class MyConsumer(AsyncWebsocketConsumer):
                 sender="AI",
                 message_text=gpt_response,
             )
+            # ----------------------生成主题------------------------------------
+            if session.thematic == "新对话" or session.thematic == "no thematic":
+                await GPT_generate.get_thimatic(chat_history,session,websocket=self)
+            # ----------------------提取关键字------------------------------------
         except Exception as e:
             print(f'file = {__file__},err = {str(e)}')
             response_data = {
