@@ -12,14 +12,11 @@ function adjustLayout() {
     document.querySelector('.chat-toolbar-chatmain').style.height = (chatParentHeight * 0.20) + 'px';
     // 获取chat-toolbar-chatmain的宽度
     var messageInputContainer_w = document.querySelector('.message-input-container').offsetWidth;
-    var messageInputContainer_h = document.querySelector('.message-input-container').offsetHeight;
-    // 调整textarea的大小
-    var textarea = document.querySelector('.text-edit');
-    textarea.style.width = (messageInputContainer_w * 0.83) + 'px';  // 例如，设置宽度为chat-toolbar-chatmain宽度的80%
-    textarea.style.height = (messageInputContainer_h * 0.7) + 'px'; // 自动高度，或者也可以设置一个基于chatToolbarChatmainWidth的值
+
+
     // 调整submitChat图标的大小
     var submitChatIcon = document.querySelector('.submit-icon');
-    submitChatIcon.style.fontSize = (messageInputContainer_w * 0.07) + 'px'; //messageInputContainer_w
+    submitChatIcon.style.fontSize = (messageInputContainer_w * 0.08) + 'px'; //messageInputContainer_w
 
     //------------------------主题窗口的大小调整 -----------------------------------//
     var thematicParentHeight = document.querySelector('.chat-thematic').offsetHeight;
@@ -191,9 +188,7 @@ function addNewSessionToUI(sessionId) {
     var sessionLink = document.createElement('a'); // 创建链接元素
     sessionLink.href = 'javascript:;';
     sessionLink.textContent = '新对话 '; // 这里可以设置为会话的实际名称或主题
-    sessionLink.onclick = function () {
-        sendRequest(sessionId);
-    }; // 设置点击事件
+    sessionLink.setAttribute('onclick', 'sendRequest(' + sessionId + ')');
     newSession.appendChild(sessionLink); // 把链接加到LI元素上
     // 将新会话插入到列表的最前面
     if (sessionsList.firstChild) {
@@ -209,6 +204,7 @@ function addNewSessionToUI(sessionId) {
         // 重新渲染导航栏
         element.render('nav', 'thematic');
     });
+    sessionLink.click();
 }
 
 var isCreatingSession = false;
@@ -245,32 +241,6 @@ function startConversation() {
         }
     });
 }
-
-//form表单向后台提交用户对话数据——后续被我换成websocket了，但是不想动页面布局，就沿用这个表单提交
-layui.use("form", function () {
-    var form = layui.form;
-
-    form.on('submit(submitChat)', function (data) {
-        var userInfo = document.getElementById('userInfo');
-        var userID = userInfo.getAttribute('data-userid'); // 获取用户id
-        // 阻止表单的默认提交行为
-        event.preventDefault();
-        // 检查 chat-text 是否为空
-        if (!data.field['chat-text'] || data.field['chat-text'].trim() === '') {
-            console.log('chat-text 为空，不提交到后台');
-            event.preventDefault();
-            return false;
-        }
-        //websocket发送请求
-        socket.send(JSON.stringify({
-            'chat-text': document.getElementById('chat-text').value,
-            'session_id': currentSessionId,  // 包含 session_id
-            'user_id': userID
-        }));
-        document.getElementById('chat-text').value = '';
-        return false;  // 防止表单的默认提交行为
-    });
-});
 
 function addMessageToChat(message) {
     var chatContainer = document.getElementById('chat-container');
@@ -393,27 +363,67 @@ function finalizeAIBubble(bubble) {
     chatContent.scrollTop = chatContent.scrollHeight;
 }
 
-/*
-// 选中所有的panel
-const panels = document.querySelectorAll('.panel')
-// querySelectorAll选中的形式是一串数组，所以我们后面使用foeEach
-panels.forEach((panel) => {
-    // 点击事件
-    panel.addEventListener('click', () => {
-        // 清除其他的class上的active,这里一定要放在增加之前，不然会导致所有的都展开
-        removeActiveClasses()
-        // 给被点击的class增加active，这样它就有了active属性，也就会被展开，根据css里面的flex改成了5
-        panel.classList.add('active')
-        console.log("click panel")
-    })
-})
 
-// 该方法用于去除active
-function removeActiveClasses() {
-    panels.forEach((panel) => {
-        panel.classList.remove('active')
-    })
-}
+//form表单向后台提交用户对话数据——后续被我换成websocket了，但是不想动页面布局，就沿用这个表单提交
+layui.use(["form","croppers"], function () {
+    var form = layui.form;
+    var croppers = layui.croppers;
+    var imageUrl = ''; // 初始化图片URL变量
 
-*/
+    croppers.render({
+            elem: '#image_select', // Bind the cropper to the icon
+            area: '750px', // Cropper window size or make it dynamic based on parameters
+            url: '/upload/uploadImage', // Server URL to send the cropped image
+            name: 'ChatImage',
+            cancel:function (name){
+                $('.showImgEdit_ChatImage').hide();
+            },
+            done: function(url) {  // Callback after cropping and uploading
+                console.log("cropped image url:",url)
+                $('.showImgEdit_ChatImage').hide();
+                var imageUrl = url; // 初始化图片URL变量
+                // 显示图片和调整布局
+                var imgContainer = document.querySelector('.chat-form-image');
+                var img = imgContainer.querySelector('img');
 
+                imgContainer.style.display = 'block'; // 显示图片容器
+                img.src = imageUrl; // 设置图片路径
+
+                // 调整flex布局和margin
+                document.querySelector('.chat-form-text').style.marginLeft = '0px';
+                imgContainer.style.marginLeft="14px"
+                imgContainer.style.width = 'auto'; // 图片宽度自适应
+
+                // 重新计算宽度比（你可以根据实际需要调整这些值）
+                // imgContainer.style.flexGrow='0'
+                document.querySelector('.chat-form-text').style.flexGrow = '9';
+                document.querySelector('.chat-form-submit').style.flexGrow = '2';
+            }
+        });
+
+    form.on('submit(submitChat)', function (data) {
+        var userInfo = document.getElementById('userInfo');
+        var userID = userInfo.getAttribute('data-userid'); // 获取用户id
+        // 阻止表单的默认提交行为
+        event.preventDefault();
+        // 检查 chat-text 是否为空
+        if (!data.field['chat-text'] || data.field['chat-text'].trim() === '') {
+            console.log('chat-text 为空，不提交到后台');
+            event.preventDefault();
+            return false;
+        }
+         var messageData = {
+            'chat-text': document.getElementById('chat-text').value,
+            'session_id': currentSessionId,
+            'user_id': userID
+        };
+
+        if (imageUrl) { // 如果有图片URL则添加到发送数据中
+            messageData['image_url'] = imageUrl;
+        }
+        //websocket发送请求
+        socket.send(JSON.stringify(messageData));
+        document.getElementById('chat-text').value = '';
+        return false;  // 防止表单的默认提交行为
+    });
+});

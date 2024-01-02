@@ -9,7 +9,11 @@
     flex-grow: 1; /* 默认情况下占据所有剩余空间 */
     overflow-y: auto;
 }
+.chat-hr{
+    margin-top: 5px;
+    margin-bottom: 5px;
 
+}
 .chat-tolbar-container {
     display: flex;
     align-items: center; /* 垂直居中图标 */
@@ -28,11 +32,75 @@
 .message-input-container {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     width: 99%;
     height: 60%; /* 占chat-toolbar-chatmain高度的60% */
     border: 1px solid #6d737b;
     border-radius: 20px;
 }
+.chat-form-image{
+    height: 90%;
+    margin: 0px;
+    display: none; /* 默认隐藏 */
+    overflow: hidden; /* 防止内容溢出 */
+    position: relative;
+
+}
+.chat-form-text{
+
+    height: 90%;
+    margin: 0 0 0 14px;
+    flex: 10 1 0%; /* 占据多余空间的11份，允许缩小，基础宽度为0% */
+    /*子项目也是flex布局*/
+    display: flex;
+    align-items: center;
+
+}
+.chat-form-image img {
+    width: auto;  /* 自适应宽度 */
+    height: 100%; /* 高度填满容器 */
+    object-fit: contain; /* 保持图片比例 */
+}
+.close-btn {
+    top: 0px; /* 调整位置 */
+    right: 0px; /* 调整位置 */
+    position: absolute;
+    display: none; /* 默认不显示 */
+    background-color: #f44336; /* 红色背景 */
+    color: white; /* 白色图标 */
+    border: none; /* 无边框 */
+    border-radius: 50%; /* 圆形按钮 */
+    width: 16px; /* 宽度 */
+    height: 16px; /* 高度 */
+    font-size: 12px;
+    text-align: center; /* 文字居中 */
+    line-height: 16px; /* 调整行高以垂直居中图标 */
+    cursor: pointer; /* 鼠标悬浮时显示手指指针 */
+    z-index: 100; /* 确保在顶层 */
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.26); /* 添加轻微的阴影 */
+    opacity: 0.7;
+}
+/*.close-btn:hover {*/
+/*    background-color: #d32f2f; !* 悬浮时的背景色 *!*/
+/*}*/
+
+/*!* 适应图标库的样式，如 layui-icon-close *!*/
+/*.close-btn.layui-icon-close {*/
+/*    font-size: 16px; !* 调整图标大小 *!*/
+/*}*/
+.chat-form-image:hover .close-btn {
+    display: block; /* 鼠标悬停时显示 */
+}
+.chat-form-submit{
+
+    flex: 2 1 0%; /* 占据多余空间的1份，允许缩小，基础宽度为0% */
+    /*子项目也是flex布局*/
+    display: flex; /* 也使用Flex布局以便居中图标 */
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+    margin: 0;
+}
+
 .text-edit {
     width: 100%;
     height: 70%;
@@ -40,18 +108,8 @@
     padding: 2px;
     resize: none;
     outline: none;
-    border: none;
-}
-.chat-form-text{
-    margin: 0;
-    padding-left: 14px;
-
-}
-.chat-form-submit{
-    display: flex; /* 也使用Flex布局以便居中图标 */
-    justify-content: center; /* 水平居中 */
-    align-items: center; /* 垂直居中 */
-    margin: 0;
+    border:none;
+    /*border: 1px solid saddlebrown;*/
 }
 .submit-icon{
     color: #1E9FFF;

@@ -20,8 +20,8 @@ layui.extend({
                 mark = e.mark,
                 area = e.area,
                 url = e.url,
-                done = e.done;
-
+                done = e.done,
+                cancelFun = e.cancel;
             var html = "<link rel=\"stylesheet\" href=\"/static/assets/module/croppers/cropper.css\">\n" +
                 "<div class=\"layui-fluid showImgEdit_" + name + "\" style=\"display: none\">\n" +
                 "    <div class=\"layui-form-item\" style=\"margin-top:0px;\">\n" +
@@ -29,9 +29,9 @@ layui.extend({
                 "            <label for=\"cropper_avatarImgUpload_" + name + "\" class=\"layui-btn layui-btn-primary\">\n" +
                 "                <i class=\"layui-icon\">&#xe67c;</i>选择图片\n" +
                 "            </label>\n" +
-                "            <input class=\"layui-upload-file\" id=\"cropper_avatarImgUpload_" + name + "\" type=\"file\" value=\"选择图片\" name=\"file\">\n" +
+                "            <input class=\"layui-upload-file\" id=\"cropper_avatarImgUpload_" + name + "\" type=\"file\"  accept=\"image/*\" value=\"选择图片\" name=\"file\">\n" +
                 "        </div>\n" +
-                "        <div class=\"layui-form-mid layui-word-aux\">上传图片大小限定在500kb以内</div>\n" +
+                // "        <div class=\"layui-form-mid layui-word-aux\">上传图片大小限定在500kb以内</div>\n" +
                 "    </div>\n" +
                 "    <div class=\"layui-row layui-col-space15\">\n" +
                 "        <div class=\"layui-col-xs9\">\n" +
@@ -51,12 +51,6 @@ layui.extend({
                 "                    <button type=\"button\" class=\"layui-btn layui-icon layui-icon-left\" cropper-event=\"rotate\" data-option=\"-15\" title=\"Rotate -90 degrees\"> 向左旋转</button>\n" +
                 "                    <button type=\"button\" class=\"layui-btn layui-icon layui-icon-right\" cropper-event=\"rotate\" data-option=\"15\" title=\"Rotate 90 degrees\"> 向右旋转</button>\n" +
                 "                </div>\n" +
-                // "                <div class=\"layui-col-xs5\" style=\"text-align: right;\">\n" +
-                // "                    <button type=\"button\" class=\"layui-btn layui-icon layui-icon-set-fill\" title=\"移动\"></button>\n" +
-                // "                    <button type=\"button\" class=\"layui-btn layui-icon layui-icon-share\" title=\"放大图片\"></button>\n" +
-                // "                    <button type=\"button\" class=\"layui-btn layui-icon layui-icon-share\" title=\"缩小图片\"></button>\n" +
-                // "                    <button type=\"button\" class=\"layui-btn layui-icon layui-icon-refresh\" cropper-event=\"reset\" title=\"重置图片\"></button>\n" +
-                // "                </div>\n" +
                 "            </div>\n" +
                 "        </div>\n" +
                 "        <div class=\"layui-col-xs3\">\n" +
@@ -74,17 +68,19 @@ layui.extend({
                 , options = {aspectRatio: mark, preview: preview, viewMode: 1};
 
             $(elem).on('click', function () {
+                console.log("layer.open")
                 layer.open({
-                    title: '选择图片裁剪'
-                    , type: 1
-                    , content: content
-                    , area: area
-                    , success: function () {
+                    title: '选择图片裁剪',
+                    type: 1,
+                    content: content,
+                    area: area,
+                    success: function () {
                         image.cropper(options);
-                    }
-                    , cancel: function (index) {
+                    },
+                    cancel: function (index) {
                         layer.close(index);
                         image.cropper('destroy');
+                        return cancelFun(name);
                     }
                 });
                 return false;
@@ -109,7 +105,7 @@ layui.extend({
                             processData: false,
                             contentType: false,
                             success: function (result) {
-                                if (result.code == 0) {
+                                if (result.code === 0) {
                                     //关闭提示层
                                     layer.close(index);
                                     layer.msg(result.msg, {icon: 1});
@@ -134,6 +130,7 @@ layui.extend({
                 }
                 //文件选择
                 file.change(function () {
+                    console.log('select file')
                     var r = new FileReader();
                     var f = this.files[0];
                     r.readAsDataURL(f);

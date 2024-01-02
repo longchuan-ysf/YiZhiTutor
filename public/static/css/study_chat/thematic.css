@@ -18,6 +18,7 @@
 .chat-thematic-foot {
     display: flex;
     align-items: center; /* 垂直居中图标 */
+    justify-content: space-around;
 }
 
 
@@ -51,20 +52,20 @@
 }
 
 
-.thematic-foot-date,.thematic-foot-add{
-    width: 50%;
-    display: flex; /* 使用flex布局 */
-    align-items: center; /* 垂直居中 */
-}
-.thematic-foot-date {
-    justify-content: flex-start; /* 左对齐 */
-    margin-left: 0.01%;
-}
+/*.thematic-foot-date,.thematic-foot-add{*/
+/*    !*width: 50%;*!*/
+/*    display: flex; !* 使用flex布局 *!*/
+/*    align-items: center; !* 垂直居中 *!*/
+/*}*/
+/*.thematic-foot-date {*/
+/*    justify-content: flex-start; !* 左对齐 *!*/
+/*    margin-left: 0.01%;*/
+/*}*/
 
-.thematic-foot-add {
-    justify-content: flex-end; /* 右对齐 */
-    margin-right: 0.01%;
-}
+/*.thematic-foot-add {*/
+/*    justify-content: flex-end; !* 右对齐 *!*/
+/*    margin-right: 0.01%;*/
+/*}*/
 
 
 

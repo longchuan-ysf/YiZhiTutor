@@ -24,7 +24,7 @@ def get_chat_history(user_id, session_id):
 
 
 async def get_gpt_response(history, user_input, websocket=None, max_tokens=1024):
-    api_key = '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'
+
     client = AsyncOpenAI(api_key=api_key)  # 使用异步客户端
 
     # 添加当前用户输入到历史
@@ -80,7 +80,6 @@ async def get_gpt_response(history, user_input, websocket=None, max_tokens=1024)
 
 
 async def get_thimatic(historys, session, websocket=None):
-    api_key = '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'
     client = AsyncOpenAI(api_key=api_key)  # 使用异步客户端
     text = "帮我给这段对话起个标题,不超过8个字。回复的格式严格固定为：标题：XXXXX\n\n"
     pattern = r"标题.*?：(.+)"
@@ -130,9 +129,11 @@ async def get_thimatic(historys, session, websocket=None):
 
 
 async def get_highlight(historys, session):
-    api_key = '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'
     client = AsyncOpenAI(api_key=api_key)  # 使用异步客户端
-    text = '提取这段对话的小学知识重点，回答的格式为：重点为1、xxxxx,2、xxxxx",3、xxxxx\n\n'
+    text = '提取这段对话重点，如果有小学知识，重点放在小学知识上比如工作效率=工作总量/时间、圆的面积s=πr^2、分数换算百分数等。' \
+           '回答的格式为：重点为1、标题:内容,2、标题:内容,3、标题:内容...等等' \
+           '回答时，其中标题要换成实际重点的标题，内容换成实际重点的内容' \
+           '内容在50到100字之间\n\n'
     # 将每个字典格式化为指定的字符串格式
     formatted_strings = ['"role": "{}",\n"content":"{}"'.format(history["role"], history["content"]) for history in
                          historys]

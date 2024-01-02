@@ -3,27 +3,33 @@
 <head>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/study_chat/chat.css' %}">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'assets/js/jquery-3.7.1.min.js' %}"></script>
+    {#    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>#}
 </head>
 <body>
 <div class="chat-body">
     <div class="chat-content">
         {% include "study_chat/chatinfo.html" %}
     </div>
-    <hr>
+    <hr class="chat-hr">
     <div class="chat-tolbar-container">
-        <i class="layui-icon layui-icon-picture-fine chat-toolbar-icon"></i>
-        <i class="layui-icon layui-icon-voice chat-toolbar-icon"></i>
+        <i class="layui-icon layui-icon-camera chat-toolbar-icon" id="image_select"></i>
+        <i class="layui-icon layui-icon-mike chat-toolbar-icon"></i>
     </div>
-
+    {#这里从最开始使用传统http请求，换到使用websocket，但是不想动这里的布局，所以还是使用form表单，但是在js代码中截阻请求，换成websocket#}
     <form class="layui-form" action="/chat/submit_txt" method="post">
         <div class="chat-toolbar-chatmain">
             <div class="message-input-container">
-                 <div class="layui-form-item layui-form-text chat-form-text">
+                <div class="layui-form-item chat-form-image" style="display:none">
+                    <img id="image-preview" src="" alt="Image Preview"/>
+                    <button class="close-btn layui-icon layui-icon-close"></button>
+                </div>
+                <div class="layui-form-item layui-form-text chat-form-text">
                     <textarea id="chat-text" name="chat-text" rows="4" autofocus="true" class="text-edit"></textarea>
                 </div>
-                <div class="layui-form-item chat-form-submit" >
-                    <i class="layui-icon layui-icon-release submit-icon" lay-submit="" lay-filter="submitChat" type="submit" ></i>
+                <div class="layui-form-item chat-form-submit">
+                    <i class="layui-icon layui-icon-release submit-icon" lay-submit="" lay-filter="submitChat"
+                       type="submit"></i>
                 </div>
             </div>
         </div>
