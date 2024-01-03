@@ -38,40 +38,11 @@ class ChatIndexView(PermissionRequired, View):
 @method_decorator(check_login, name='post')
 class ChatSubmitTxtView(PermissionRequired, View):
     permission_required = ('sys:chat:index',)
-
+    # 由于现在不使用http改为websocket，所以现在不用这个函数
     def post(self, request):
-        try:
-            # 解析请求体中的 JSON 数据
-            data = json.loads(request.body)
-            print("ChatSubmitTxtView",data)
-            # 假设请求体中包含了 'message_text' 和 'session_id'
-            message_text = data.get('chat-text')
-            session_id = data.get('session_id')
-            # 获取相关的聊天会话
-            session = ChatSession.objects.get(id=session_id)
-            user_id = request.session.get('user_id')
-            userInfo = User.objects.filter(is_delete=False, id=user_id).first()
-            # 创建新的聊天消息实例
-            new_message = ChatMessage.objects.create(
-                session=session,
-                sender=userInfo.realname,  # 假设发送者是当前登录用户
-                message_text=message_text,
-            )
-            print(new_message)
-            response_data = {
-                "session_id":session_id,
-                'message_text': new_message.message_text,
-                'sender': new_message.sender,
-                'timestamp': new_message.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
-                "media_type": None,
-                "media_url": None
-            }
-            # 返回成功响应
-            return R.ok(data=response_data)
+            return R.ok()
 
-        except Exception as e:
-            # 发生错误时返回错误响应
-            return R.failed(message=str(e))
+
 
 
 
@@ -111,3 +82,12 @@ class ThematicAddView(PermissionRequired, View):
 
         except Exception as e:
             return R.failed(faild_msg=str(e))
+
+
+@method_decorator(check_login, name='post')
+class OCRView(PermissionRequired, View):
+    permission_required = ('sys:chat:index',)
+    # 由于现在不使用http改为websocket，所以现在不用这个函数
+    def post(self, request):
+        image_url = request.POST.get('imageUrl', '')
+        return R.ok()

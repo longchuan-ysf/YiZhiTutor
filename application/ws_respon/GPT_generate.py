@@ -4,8 +4,9 @@ from application.study_chat import services
 import json
 import re
 from asgiref.sync import sync_to_async
-
-
+import secret_key
+# api_key = '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'
+api_key = secret_key.gpt_api_key
 def get_chat_history(user_id, session_id):
     # 初始化对话历史
     messages = []

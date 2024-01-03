@@ -362,6 +362,12 @@ function finalizeAIBubble(bubble) {
     var chatContent = document.querySelector('.chat-content');
     chatContent.scrollTop = chatContent.scrollHeight;
 }
+// 定义关闭图片预览的函数
+function closeImagePreview() {
+    console.log("closeImagePreview")
+    document.querySelector('.chat-form-image').style.display = 'none';
+    document.querySelector('.chat-form-text').style.marginLeft = '14px';
+}
 
 
 //form表单向后台提交用户对话数据——后续被我换成websocket了，但是不想动页面布局，就沿用这个表单提交
@@ -369,7 +375,6 @@ layui.use(["form","croppers"], function () {
     var form = layui.form;
     var croppers = layui.croppers;
     var imageUrl = ''; // 初始化图片URL变量
-
     croppers.render({
             elem: '#image_select', // Bind the cropper to the icon
             area: '750px', // Cropper window size or make it dynamic based on parameters
