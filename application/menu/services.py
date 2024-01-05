@@ -401,7 +401,6 @@ def GetTreeList(list):
             menu_list.append(data)
     # 处理数据源为树状结构
     result = get_tree(menu_list, 0)
-    print(result)
     # 返回结果
     return result
 

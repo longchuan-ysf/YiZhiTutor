@@ -4,16 +4,17 @@ from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views import View
 
-from application.study_chat import services
-from application.study_chat.models import ChatSession,ChatMessage
+from application.study_chat import services, ocr
+from application.study_chat.models import ChatSession, ChatMessage
 from middleware.login_middleware import check_login
 from middleware.permission_middleware import PermissionRequired
 from application.user.models import User
 # 渲染角色首页
 from utils import R
 import json
-from utils.utils import getImageURL
+from utils.utils import getImageURL, URL2DiskPath
 from config.env import IMAGE_URL
+import os
 
 
 # 角色首页
@@ -38,12 +39,10 @@ class ChatIndexView(PermissionRequired, View):
 @method_decorator(check_login, name='post')
 class ChatSubmitTxtView(PermissionRequired, View):
     permission_required = ('sys:chat:index',)
+
     # 由于现在不使用http改为websocket，所以现在不用这个函数
     def post(self, request):
-            return R.ok()
-
-
-
+        return R.ok()
 
 
 @method_decorator(check_login, name='post')
@@ -67,6 +66,7 @@ class ThematicChangeView(PermissionRequired, View):
 @method_decorator(check_login, name='post')
 class ThematicAddView(PermissionRequired, View):
     permission_required = ('sys:chat:index',)
+
     def post(self, request):
         try:
             # 解析请求体中的JSON数据
@@ -87,7 +87,12 @@ class ThematicAddView(PermissionRequired, View):
 @method_decorator(check_login, name='post')
 class OCRView(PermissionRequired, View):
     permission_required = ('sys:chat:index',)
-    # 由于现在不使用http改为websocket，所以现在不用这个函数
+
     def post(self, request):
         image_url = request.POST.get('imageUrl', '')
-        return R.ok()
+        DiskPath = URL2DiskPath(image_url)
+        if os.path.exists(DiskPath):
+            ocr_text = ocr.get_ocr_results(DiskPath)
+        else:
+            return R.failed()
+        return R.ok(data=ocr_text)

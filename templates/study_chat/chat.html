@@ -17,15 +17,21 @@
         <i class="layui-icon layui-icon-mike chat-toolbar-icon"></i>
     </div>
     {#这里从最开始使用传统http请求，换到使用websocket，但是不想动这里的布局，所以还是使用form表单，但是在js代码中截阻请求，换成websocket#}
-    <form class="layui-form" action="/chat/submit_txt" method="post">
+    <form class="layui-form chat-form" action="/chat/submit_txt" method="post">
         <div class="chat-toolbar-chatmain">
             <div class="message-input-container">
-                <div class="layui-form-item chat-form-image" style="display:none">
-                    <img id="image-preview" src="" alt="Image Preview"/>
-                    <button type="button" class="close-btn layui-icon layui-icon-close" onclick="closeImagePreview()"></button>
-                </div>
-                <div class="layui-form-item layui-form-text chat-form-text">
-                    <textarea id="chat-text" name="chat-text" rows="4" autofocus="true" class="text-edit"></textarea>
+                <div class="chat-form-input">
+                    <div class="layui-form-item chat-form-image">
+                        <div class="image-container">
+                            <img id="image-preview" src="/static/assets/images/ic_403.png" alt="Image Preview"/>
+                            <button type="button" class="close-btn layui-icon layui-icon-close"
+                                    onclick="closeImagePreview()"></button>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-form-text chat-form-text">
+                        <textarea id="chat-text" name="chat-text" rows="4" autofocus="true"
+                                  class="text-edit"></textarea>
+                    </div>
                 </div>
                 <div class="layui-form-item chat-form-submit">
                     <i class="layui-icon layui-icon-release submit-icon" lay-submit="" lay-filter="submitChat"

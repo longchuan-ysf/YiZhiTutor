@@ -6,13 +6,14 @@
 }
 
 .chat-thematic-header{
-
+    height: 8%;
 
 }
 
 .chat-thematic-content {
     /* 垂直方向自动加滚条 */
     overflow-y: auto;
+    height: 80%;
 }
 
 .chat-thematic-foot {

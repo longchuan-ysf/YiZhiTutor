@@ -14,7 +14,6 @@ def get_file_content_as_base64(path, urlencoded=False):
     :param urlencoded: 是否对结果进行urlencoded
     :return: base64编码信息
     """
-
     try:
         with open(path, "rb") as f:
             content = base64.b64encode(f.read()).decode("utf8")

@@ -1,28 +1,20 @@
 /*
 * 根据窗口的大小改编界面上面元素的大小
 * */
+
 function adjustLayout() {
     //------------------------聊天窗口的大小调整 -----------------------------------//
     var chatParentHeight = document.querySelector('.chat-body').offsetHeight;
-    document.querySelector('.chat-content').style.height = (chatParentHeight * 0.75) + 'px';
-    document.querySelector('.chat-tolbar-container').style.height = (chatParentHeight * 0.05) + 'px';
     document.querySelectorAll('.chat-toolbar-icon').forEach(function (icon) {
         icon.style.fontSize = (chatParentHeight * 0.04) + 'px';
     });
-    document.querySelector('.chat-toolbar-chatmain').style.height = (chatParentHeight * 0.20) + 'px';
     // 获取chat-toolbar-chatmain的宽度
     var messageInputContainer_w = document.querySelector('.message-input-container').offsetWidth;
-
-
     // 调整submitChat图标的大小
     var submitChatIcon = document.querySelector('.submit-icon');
     submitChatIcon.style.fontSize = (messageInputContainer_w * 0.08) + 'px'; //messageInputContainer_w
 
     //------------------------主题窗口的大小调整 -----------------------------------//
-    var thematicParentHeight = document.querySelector('.chat-thematic').offsetHeight;
-    document.querySelector('.chat-thematic-header').style.height = (thematicParentHeight * 0.08) + 'px';
-    document.querySelector('.chat-thematic-content').style.height = (thematicParentHeight * 0.80) + 'px';
-
     // 动态设置主题栏的字体大小
     setThematicFontSize();
 
@@ -362,49 +354,68 @@ function finalizeAIBubble(bubble) {
     var chatContent = document.querySelector('.chat-content');
     chatContent.scrollTop = chatContent.scrollHeight;
 }
+
+var imageUrl = ''; // 初始化图片URL变量
 // 定义关闭图片预览的函数
 function closeImagePreview() {
-    console.log("closeImagePreview")
-    document.querySelector('.chat-form-image').style.display = 'none';
-    document.querySelector('.chat-form-text').style.marginLeft = '14px';
+    console.log("closeImagePreview");
+    imageUrl = '';
+
+    var imgContainer = document.querySelector('.chat-form-image');
+    var chatFormText = document.querySelector('.chat-form-text');
+    var chatContent = document.querySelector('.chat-content');
+    var chatForm = document.querySelector('.chat-form');
+
+    chatContent.style.height = '75%'; // 将聊天内容区域高度改回75%
+    chatForm.style.height = '20%'; // 将聊天表单区域高度改回20%
+    // 隐藏图片容器并重置宽度
+    imgContainer.style.display = 'none';
+    imgContainer.style.height = '0%';
+    // 重新调整文本区域的宽度
+    chatFormText.style.height = '100%';
 }
 
 
 //form表单向后台提交用户对话数据——后续被我换成websocket了，但是不想动页面布局，就沿用这个表单提交
-layui.use(["form","croppers"], function () {
+layui.use(["form", "croppers"], function () {
     var form = layui.form;
     var croppers = layui.croppers;
-    var imageUrl = ''; // 初始化图片URL变量
+
     croppers.render({
-            elem: '#image_select', // Bind the cropper to the icon
-            area: '750px', // Cropper window size or make it dynamic based on parameters
-            url: '/upload/uploadImage', // Server URL to send the cropped image
-            name: 'ChatImage',
-            cancel:function (name){
-                $('.showImgEdit_ChatImage').hide();
-            },
-            done: function(url) {  // Callback after cropping and uploading
-                console.log("cropped image url:",url)
-                $('.showImgEdit_ChatImage').hide();
-                var imageUrl = url; // 初始化图片URL变量
-                // 显示图片和调整布局
-                var imgContainer = document.querySelector('.chat-form-image');
-                var img = imgContainer.querySelector('img');
+        elem: '#image_select', // Bind the cropper to the icon
+        area: '750px', // Cropper window size or make it dynamic based on parameters
+        url: '/upload/uploadImage', // Server URL to send the cropped image
+        name: 'ChatImage',
+        cancel: function (name) {
+            $('.showImgEdit_ChatImage').hide();
+        },
+        done: function (url) {  // Callback after cropping and uploading
+            imageUrl = url; // 初始化图片URL变量
+            console.log("cropped image url:", url)
+            //----------------------页面调整部分------------------------------------------------
+            $('.showImgEdit_ChatImage').hide();
+            // 显示图片和调整布局
+            var imgContainer = document.querySelector('.chat-form-image');
+            var img = imgContainer.querySelector('img');
+            var chatFormText = document.querySelector('.chat-form-text');
+            var chatContent = document.querySelector('.chat-content');
+            var chatForm = document.querySelector('.chat-form');
 
-                imgContainer.style.display = 'block'; // 显示图片容器
-                img.src = imageUrl; // 设置图片路径
+            chatContent.style.height = '65%'; // 将聊天内容区域高度改为65%
+            chatForm.style.height = '30%'; // 将聊天表单区域高度改为30%
+            imgContainer.style.display = 'block'; // 显示图片容器
+            img.src = imageUrl; // 设置图片路径
 
-                // 调整flex布局和margin
-                document.querySelector('.chat-form-text').style.marginLeft = '0px';
-                imgContainer.style.marginLeft="14px"
-                imgContainer.style.width = 'auto'; // 图片宽度自适应
+            // 设置图片和文本输入框的高度比为1:1
+            imgContainer.style.height = '50%';
+            chatFormText.style.height = '50%';
 
-                // 重新计算宽度比（你可以根据实际需要调整这些值）
-                // imgContainer.style.flexGrow='0'
-                document.querySelector('.chat-form-text').style.flexGrow = '9';
-                document.querySelector('.chat-form-submit').style.flexGrow = '2';
-            }
-        });
+            //----------------------OCR图片识别部分------------------------------------------------
+            $.post("/chat/ocr_request", {imageUrl: url}, function (response) {
+                console.log(response)
+            });
+        }
+    });
 
     form.on('submit(submitChat)', function (data) {
         var userInfo = document.getElementById('userInfo');
@@ -417,7 +428,7 @@ layui.use(["form","croppers"], function () {
             event.preventDefault();
             return false;
         }
-         var messageData = {
+        var messageData = {
             'chat-text': document.getElementById('chat-text').value,
             'session_id': currentSessionId,
             'user_id': userID

@@ -13,7 +13,7 @@ urlpatterns = [
     path('thematic_add', views.ThematicAddView.as_view()),
 
     # 小业务的处理
-    path('ocr_request', views.ThematicAddView.as_view()),
+    path('ocr_request', views.OCRView.as_view()),
 
 
 ]

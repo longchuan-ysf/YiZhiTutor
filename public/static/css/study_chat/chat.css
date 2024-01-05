@@ -8,25 +8,29 @@
 .chat-content {
     flex-grow: 1; /* 默认情况下占据所有剩余空间 */
     overflow-y: auto;
+    height: 75%;
+    transition: height 0.5s ease; /* 过渡效果 */
 }
 .chat-hr{
-    margin-top: 5px;
-    margin-bottom: 5px;
-
+    margin: 5px 0;
 }
 .chat-tolbar-container {
     display: flex;
     align-items: center; /* 垂直居中图标 */
+    height: 5%;
 }
 
 .chat-toolbar-icon {
     /* 初始大小，稍后会用JS调整 */
     font-size: 16px;
 }
-
+.chat-form{
+    height: 20%;
+    transition: height 0.5s ease; /* 过渡效果 */
+}
 .chat-toolbar-chatmain {
     /* 默认高度 */
-    height: 100px;
+    height: 100%;
 }
 
 .message-input-container {
@@ -38,28 +42,56 @@
     border: 1px solid #6d737b;
     border-radius: 20px;
 }
-.chat-form-image{
-    height: 90%;
-    margin: 0px;
-    display: none; /* 默认隐藏 */
-    overflow: hidden; /* 防止内容溢出 */
-    position: relative;
 
+.chat-form-submit{
+    width: 16%;
+    /*子项目也是flex布局*/
+    display: flex; /* 也使用Flex布局以便居中图标 */
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+    margin: 0;
+}
+
+.chat-form-input{
+    width: 84%;
+    height: 100%;
+}
+
+
+.chat-form-image{
+    display: none;
+    overflow: hidden; /* 防止内容溢出 */
+    height: 0%;
+    margin: 2px 0 0 14px;
 }
 .chat-form-text{
-
-    height: 90%;
     margin: 0 0 0 14px;
-    flex: 10 1 0%; /* 占据多余空间的11份，允许缩小，基础宽度为0% */
+    height: 100%;
     /*子项目也是flex布局*/
     display: flex;
     align-items: center;
-
 }
+
+.image-container {
+    height: 100%;
+    position: relative;
+    display: inline-block; /* 或者其他适合的显示方式 */
+}
+
 .chat-form-image img {
-    width: auto;  /* 自适应宽度 */
-    height: 100%; /* 高度填满容器 */
-    object-fit: contain; /* 保持图片比例 */
+    display: block;
+    height: 100%;
+    width: auto;
+    object-fit: scale-down; /* 保持图片比例 */
+}
+.text-edit {
+    width: 100%;
+    height: 70%;
+    margin: 0px;
+    padding: 2px;
+    resize: none;
+    outline: none;
+    border:none;
 }
 .close-btn {
     top: 0px; /* 调整位置 */
@@ -80,37 +112,13 @@
     box-shadow: 0 2px 5px 0 rgba(0,0,0,0.26); /* 添加轻微的阴影 */
     opacity: 0.7;
 }
-/*.close-btn:hover {*/
-/*    background-color: #d32f2f; !* 悬浮时的背景色 *!*/
-/*}*/
 
-/*!* 适应图标库的样式，如 layui-icon-close *!*/
-/*.close-btn.layui-icon-close {*/
-/*    font-size: 16px; !* 调整图标大小 *!*/
-/*}*/
 .chat-form-image:hover .close-btn {
     display: block; /* 鼠标悬停时显示 */
 }
-.chat-form-submit{
 
-    flex: 2 1 0%; /* 占据多余空间的1份，允许缩小，基础宽度为0% */
-    /*子项目也是flex布局*/
-    display: flex; /* 也使用Flex布局以便居中图标 */
-    justify-content: center; /* 水平居中 */
-    align-items: center; /* 垂直居中 */
-    margin: 0;
-}
 
-.text-edit {
-    width: 100%;
-    height: 70%;
-    margin: 0px;
-    padding: 2px;
-    resize: none;
-    outline: none;
-    border:none;
-    /*border: 1px solid saddlebrown;*/
-}
+
 .submit-icon{
     color: #1E9FFF;
 }
