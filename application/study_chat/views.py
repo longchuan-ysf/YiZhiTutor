@@ -94,5 +94,9 @@ class OCRView(PermissionRequired, View):
         if os.path.exists(DiskPath):
             ocr_text = ocr.get_ocr_results(DiskPath)
         else:
-            return R.failed()
-        return R.ok(data=ocr_text)
+            return R.failed(msg="解析图片url有误")
+
+        if ocr_text["code"]:
+            return R.failed(code=ocr_text["code"],msg=ocr_text["msg"])
+        else:
+            return R.ok(data=ocr_text["data"],msg=ocr_text["msg"])

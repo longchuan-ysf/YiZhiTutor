@@ -92,6 +92,7 @@
     resize: none;
     outline: none;
     border:none;
+    font-size: 3%;
 }
 .close-btn {
     top: 0px; /* 调整位置 */

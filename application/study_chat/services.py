@@ -77,7 +77,7 @@ def get_chat_messages_as_json(user_id, session_id):
                     message_data["message_text"] = ''
                     message_data["media_type"] = media_record.media_type
                     message_data["media_url"] = media_record.media_url
-                    if media_record.media_type == 1 and match.group(2).strip():
+                    if media_record.media_type and match.group(2).strip():
                         audio_text = match.group(2).strip()
                         message_data["message_text"] = audio_text
             response_data["messages"].append(message_data)

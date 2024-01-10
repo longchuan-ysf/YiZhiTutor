@@ -32,3 +32,4 @@ IMAGE_URL = "http://mylocaluploads.com"
 ATTACHMENT_PATH = "E:/3school/GraduationDesign/software/uploads"
 IMAGE_PATH = '{}/images'.format(ATTACHMENT_PATH)
 TEMP_PATH = '{}/temp'.format(ATTACHMENT_PATH)
+CHAT_MULTIMEDIA_PATH = '{}/chat'.format(ATTACHMENT_PATH)

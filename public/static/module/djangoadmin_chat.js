@@ -13,6 +13,13 @@ function adjustLayout() {
     // 调整submitChat图标的大小
     var submitChatIcon = document.querySelector('.submit-icon');
     submitChatIcon.style.fontSize = (messageInputContainer_w * 0.08) + 'px'; //messageInputContainer_w
+    //调整textArea字体的大小
+     var textArea = document.getElementById('chat-text');
+     var width = textArea.offsetWidth;
+     var fontSize = width*0.04;
+     textArea.style.fontSize = fontSize + 'px';
+
+
 
     //------------------------主题窗口的大小调整 -----------------------------------//
     // 动态设置主题栏的字体大小
@@ -365,7 +372,9 @@ function closeImagePreview() {
     var chatFormText = document.querySelector('.chat-form-text');
     var chatContent = document.querySelector('.chat-content');
     var chatForm = document.querySelector('.chat-form');
+    var textArea = document.getElementById('chat-text'); // 获取textarea
 
+    textArea.value  = '';
     chatContent.style.height = '75%'; // 将聊天内容区域高度改回75%
     chatForm.style.height = '20%'; // 将聊天表单区域高度改回20%
     // 隐藏图片容器并重置宽度
@@ -380,7 +389,6 @@ function closeImagePreview() {
 layui.use(["form", "croppers"], function () {
     var form = layui.form;
     var croppers = layui.croppers;
-
     croppers.render({
         elem: '#image_select', // Bind the cropper to the icon
         area: '750px', // Cropper window size or make it dynamic based on parameters
@@ -411,8 +419,19 @@ layui.use(["form", "croppers"], function () {
             chatFormText.style.height = '50%';
 
             //----------------------OCR图片识别部分------------------------------------------------
+            $('.submit-icon').css('color', 'grey').prop('disabled', true);//开始前禁止提交按钮
             $.post("/chat/ocr_request", {imageUrl: url}, function (response) {
                 console.log(response)
+                if (response.code === 0) { // 判断OCR识别是否成功
+                    // 显示数据在textarea
+                    $('#chat-text').val(response.data);
+                    // 恢复submit-icon的颜色并启用点击
+                    $('.submit-icon').css('color', '#1E9FFF').prop('disabled', false);
+                } else {
+                    // 处理失败情况，可以根据需要设置
+                    console.log("OCR failed: " + response.msg);
+                    // 可以选择保持禁用或给出错误信息
+                }
             });
         }
     });
@@ -422,24 +441,29 @@ layui.use(["form", "croppers"], function () {
         var userID = userInfo.getAttribute('data-userid'); // 获取用户id
         // 阻止表单的默认提交行为
         event.preventDefault();
-        // 检查 chat-text 是否为空
-        if (!data.field['chat-text'] || data.field['chat-text'].trim() === '') {
-            console.log('chat-text 为空，不提交到后台');
-            event.preventDefault();
-            return false;
+        // console.log(data)
+        //当发送信息不包含图片时，必需保证发送的内容不为空
+        if (imageUrl.trim() === '') {
+            // 检查 chat-text 是否为空(本身是否为空或者去掉首位空字符后是否为空)
+            if (!data.field['chat-text'] || data.field['chat-text'].trim() === '') {
+                console.log('chat-text 为空，不提交到后台');
+                event.preventDefault();
+                return false;
+            }
         }
         var messageData = {
             'chat-text': document.getElementById('chat-text').value,
             'session_id': currentSessionId,
-            'user_id': userID
+            'user_id': userID,
+            'image_url':imageUrl
         };
 
-        if (imageUrl) { // 如果有图片URL则添加到发送数据中
-            messageData['image_url'] = imageUrl;
-        }
         //websocket发送请求
         socket.send(JSON.stringify(messageData));
         document.getElementById('chat-text').value = '';
+        if (imageUrl) {
+            closeImagePreview();
+        }
         return false;  // 防止表单的默认提交行为
     });
 });
