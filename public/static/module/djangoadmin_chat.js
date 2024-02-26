@@ -14,11 +14,10 @@ function adjustLayout() {
     var submitChatIcon = document.querySelector('.submit-icon');
     submitChatIcon.style.fontSize = (messageInputContainer_w * 0.08) + 'px'; //messageInputContainer_w
     //调整textArea字体的大小
-     var textArea = document.getElementById('chat-text');
-     var width = textArea.offsetWidth;
-     var fontSize = width*0.04;
-     textArea.style.fontSize = fontSize + 'px';
-
+    var textArea = document.getElementById('chat-text');
+    var width = textArea.offsetWidth;
+    var fontSize = width * 0.04;
+    textArea.style.fontSize = fontSize + 'px';
 
 
     //------------------------主题窗口的大小调整 -----------------------------------//
@@ -144,7 +143,6 @@ function displayMessages(messages) {
     var avatarUrl = userInfo.getAttribute('data-avatar'); // 获取头像 URL
     messages.forEach(function (message) {
         var bubbleClass = message.sender === 'AI' ? 'bubble-right' : 'bubble-left';
-
         var avatarSrc = message.sender === 'AI' ? '/static/assets/images/ic_403.png' : avatarUrl;
         var avatarContainerClass = message.sender === 'AI' ? 'avatar-container-right' : 'avatar-container-left';
         // 媒体内容的 HTML
@@ -374,7 +372,7 @@ function closeImagePreview() {
     var chatForm = document.querySelector('.chat-form');
     var textArea = document.getElementById('chat-text'); // 获取textarea
 
-    textArea.value  = '';
+    textArea.value = '';
     chatContent.style.height = '75%'; // 将聊天内容区域高度改回75%
     chatForm.style.height = '20%'; // 将聊天表单区域高度改回20%
     // 隐藏图片容器并重置宽度
@@ -455,7 +453,7 @@ layui.use(["form", "croppers"], function () {
             'chat-text': document.getElementById('chat-text').value,
             'session_id': currentSessionId,
             'user_id': userID,
-            'image_url':imageUrl
+            'image_url': imageUrl
         };
 
         //websocket发送请求
@@ -467,3 +465,46 @@ layui.use(["form", "croppers"], function () {
         return false;  // 防止表单的默认提交行为
     });
 });
+
+// 获取录音图标
+
+
+// 当点击图标时
+
+// 确保页面加载完毕后执行代码
+function soundingRecord() {
+    var messageInputContainer = document.getElementById('message-input-container');
+    var recordContainer = document.getElementById('record-container');
+
+    if (messageInputContainer && recordContainer) {
+        // 显示录音区域
+        recordContainer.style.display = 'block';
+        recordContainer.style.bottom = '0'; // 上移至 message-input-container 位置
+
+        // message-input-container 逐渐变为透明
+        messageInputContainer.style.opacity = '0';
+    } else {
+        console.error('Element not found');
+    }
+}
+
+function restoreOriginalLayout() {
+    var messageInputContainer = document.getElementById('message-input-container');
+    var recordContainer = document.getElementById('record-container');
+
+    if (messageInputContainer && recordContainer) {
+        // 隐藏录音区域并移回初始位置
+        recordContainer.style.bottom = '-100%';
+        setTimeout(function() {
+            recordContainer.style.display = 'none';
+        }, 500); // 等待动画完成后再隐藏
+
+        // message-input-container 重新可见
+        messageInputContainer.style.opacity = '1';
+    } else {
+        console.error('Element not found');
+    }
+}
+
+
+

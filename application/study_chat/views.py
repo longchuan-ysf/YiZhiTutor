@@ -56,7 +56,7 @@ class ThematicChangeView(PermissionRequired, View):
             session_id = data.get('session_id')
             user_id = request.session.get('user_id')
             print("Received session_id:", session_id)
-            massage = services.get_chat_messages_as_json(user_id, session_id)
+            massage = services.get_chat_messages_as_json_messagesID(user_id, session_id)
             return R.ok(data=massage)
 
         except json.JSONDecodeError:

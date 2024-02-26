@@ -14,12 +14,12 @@
     <hr class="chat-hr">
     <div class="chat-tolbar-container">
         <i class="layui-icon layui-icon-camera chat-toolbar-icon" id="image_select"></i>
-        <i class="layui-icon layui-icon-mike chat-toolbar-icon"></i>
+        <i class="layui-icon layui-icon-mike chat-toolbar-icon" onclick="soundingRecord()"></i>
     </div>
     {#这里从最开始使用传统http请求，换到使用websocket，但是不想动这里的布局，所以还是使用form表单，但是在js代码中截阻请求，换成websocket#}
     <form class="layui-form chat-form" action="/chat/submit_txt" method="post">
         <div class="chat-toolbar-chatmain">
-            <div class="message-input-container">
+            <div class="message-input-container" id="message-input-container">
                 <div class="chat-form-input">
                     <div class="layui-form-item chat-form-image">
                         <div class="image-container">
@@ -36,6 +36,12 @@
                 <div class="layui-form-item chat-form-submit">
                     <i class="layui-icon layui-icon-release submit-icon" lay-submit="" lay-filter="submitChat"
                        type="submit"></i>
+                </div>
+            </div>
+            <div class="record-container" id="record-container">
+                <div class="record-button-container">
+                    <button class="record-button">录音</button>
+                    <button class="cancel-button" onclick="restoreOriginalLayout()">取消</button>
                 </div>
             </div>
         </div>

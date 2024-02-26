@@ -10,7 +10,7 @@ api_key = secret_key.gpt_api_key
 def get_chat_history(user_id, session_id):
     # 初始化对话历史
     messages = []
-    history_json = services.get_chat_messages_as_json(user_id, session_id)
+    history_json = services.get_chat_messages_as_json_messagesID(user_id, session_id)
 
     history_data = json.loads(history_json)
     messages = history_data["data"]["messages"]

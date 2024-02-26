@@ -132,3 +132,29 @@
 .chat-form-submit:active {
   transform: scale(0.6); /* 当元素处于活动状态（即被点击时），缩小到原来的0.9倍大小 */
 }
+
+
+
+.record-container {
+    display: none; /* 初始隐藏 */
+    position: absolute;
+    bottom: -100%; /* 初始位置在 message-input-container 下方 */
+    left: 0;
+    right: 0;
+    width: 100%; /* 与 message-input-container 同宽 */
+    background: #FFF; /* 背景颜色，可根据需要调整 */
+    transition: bottom 0.5s ease, opacity 0.5s ease; /* 平滑过渡动画 */
+}
+
+/* 确保 message-input-container 有过渡效果 */
+.message-input-container {
+    transition: opacity 0.5s ease;
+}
+
+.record-button-container {
+    /* 按钮容器样式 */
+}
+
+.record-button, .cancel-button {
+    /* 按钮样式 */
+}
