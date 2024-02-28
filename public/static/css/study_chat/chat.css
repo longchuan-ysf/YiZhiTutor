@@ -6,7 +6,7 @@
 }
 
 .chat-content {
-    flex-grow: 1; /* 默认情况下占据所有剩余空间 */
+    /*flex-grow: 1; !* 默认情况下占据所有剩余空间 *!*/
     overflow-y: auto;
     height: 75%;
     transition: height 0.5s ease; /* 过渡效果 */
@@ -29,7 +29,6 @@
     transition: height 0.5s ease; /* 过渡效果 */
 }
 .chat-toolbar-chatmain {
-    /* 默认高度 */
     height: 100%;
 }
 
@@ -56,8 +55,7 @@
     width: 84%;
     height: 100%;
 }
-
-
+/*1656x3584*/
 .chat-form-image{
     display: none;
     overflow: hidden; /* 防止内容溢出 */
@@ -130,31 +128,66 @@
 }
 
 .chat-form-submit:active {
-  transform: scale(0.6); /* 当元素处于活动状态（即被点击时），缩小到原来的0.9倍大小 */
+  transform: scale(0.6); /* 当元素处于活动状态（即被点击时），缩小到原来的0.6倍大小 */
 }
 
 
 
 .record-container {
     display: none; /* 初始隐藏 */
-    position: absolute;
-    bottom: -100%; /* 初始位置在 message-input-container 下方 */
     left: 0;
     right: 0;
     width: 100%; /* 与 message-input-container 同宽 */
-    background: #FFF; /* 背景颜色，可根据需要调整 */
-    transition: bottom 0.5s ease, opacity 0.5s ease; /* 平滑过渡动画 */
+    height: 60%;
+    background-color: #E0E0E0; /* 淡灰色背景 */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-
-/* 确保 message-input-container 有过渡效果 */
-.message-input-container {
-    transition: opacity 0.5s ease;
-}
-
-.record-button-container {
-    /* 按钮容器样式 */
+.record-container.active {
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative; /* 为取消按钮的绝对定位提供参考 */
 }
 
 .record-button, .cancel-button {
-    /* 按钮样式 */
+    cursor: pointer; /* 鼠标悬停时显示手型图标，提升可点击的直觉反应 */
 }
+
+.record-button {
+    border-radius: 50%; /* 保持按钮圆形 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 50px; /* 按钮宽度--这里只是设置默认值js 会动态调整按钮长宽*/
+    height: 50px; /* 按钮高度 */
+    background-color: #4DD0E1; /* 录音按钮颜色 */
+    color: white; /* 图标颜色 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* 添加阴影 */
+    transition: transform 0.2s; /* 动画效果 */
+}
+
+.record-button:hover {
+    transform: scale(1.1); /* 鼠标悬停时放大 */
+}
+
+.cancel-button {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    background: none;
+    border: none;
+    color: #757575;
+    font-size: 16px;
+    transition: transform 0.2s; /* 动画效果 */
+}
+
+.cancel-button:hover {
+    transform: scale(1.1); /* 鼠标悬停时放大 */
+}
+
+
+
+

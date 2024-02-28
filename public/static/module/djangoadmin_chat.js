@@ -3,6 +3,8 @@
 * */
 
 function adjustLayout() {
+
+
     //------------------------聊天窗口的大小调整 -----------------------------------//
     var chatParentHeight = document.querySelector('.chat-body').offsetHeight;
     document.querySelectorAll('.chat-toolbar-icon').forEach(function (icon) {
@@ -20,13 +22,22 @@ function adjustLayout() {
     textArea.style.fontSize = fontSize + 'px';
 
 
+    //------------------------录音区大小动态 -----------------------------------//
+     setRecordFontSize();
+
     //------------------------主题窗口的大小调整 -----------------------------------//
     // 动态设置主题栏的字体大小
     setThematicFontSize();
 
 
 }
+function setRecordFontSize(){
 
+    var recordContainer_H = document.querySelector('.record-container').offsetHeight;
+     var recordButton = document.querySelector('.record-button');
+     recordButton.style.height = (recordContainer_H * 0.8) + 'px';
+     recordButton.style.width = (recordContainer_H * 0.8) + 'px';
+}
 function setThematicFontSize() {
     // 计算并设置头部字体大小
     var thematicHeader = document.querySelector('.chat-thematic-header');
@@ -466,23 +477,17 @@ layui.use(["form", "croppers"], function () {
     });
 });
 
-// 获取录音图标
-
-
-// 当点击图标时
-
-// 确保页面加载完毕后执行代码
+// 点击语音输入按钮后
 function soundingRecord() {
     var messageInputContainer = document.getElementById('message-input-container');
     var recordContainer = document.getElementById('record-container');
 
     if (messageInputContainer && recordContainer) {
         // 显示录音区域
-        recordContainer.style.display = 'block';
-        recordContainer.style.bottom = '0'; // 上移至 message-input-container 位置
+        messageInputContainer.style.display = 'none';
+        recordContainer.classList.add('active');
+        setRecordFontSize();
 
-        // message-input-container 逐渐变为透明
-        messageInputContainer.style.opacity = '0';
     } else {
         console.error('Element not found');
     }
@@ -493,18 +498,11 @@ function restoreOriginalLayout() {
     var recordContainer = document.getElementById('record-container');
 
     if (messageInputContainer && recordContainer) {
-        // 隐藏录音区域并移回初始位置
-        recordContainer.style.bottom = '-100%';
-        setTimeout(function() {
-            recordContainer.style.display = 'none';
-        }, 500); // 等待动画完成后再隐藏
-
-        // message-input-container 重新可见
-        messageInputContainer.style.opacity = '1';
+        recordContainer.classList.remove('active'); // 移动record-container
+        // 为了让动画效果显示，我们稍微延迟显示chat-toolbar-chatmain
+        messageInputContainer.style.display = 'flex';
     } else {
         console.error('Element not found');
     }
 }
-
-
 
