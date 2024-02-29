@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views import View
 
-from application.study_chat import services, ocr
+from application.study_chat import services, ocr,asr
 from application.study_chat.models import ChatSession, ChatMessage
 from middleware.login_middleware import check_login
 from middleware.permission_middleware import PermissionRequired
@@ -100,3 +100,16 @@ class OCRView(PermissionRequired, View):
             return R.failed(code=ocr_text["code"],msg=ocr_text["msg"])
         else:
             return R.ok(data=ocr_text["data"],msg=ocr_text["msg"])
+
+
+@method_decorator(check_login, name='post')
+class ASRView(PermissionRequired, View):
+    permission_required = ('sys:chat:index',)
+
+    def post(self, request):
+        audio_file = request.FILES['audio_file']
+        audio_url, audio_file_path = asr.saveAudio(audio_file)
+        result = asr.asr_request(audio_file_path)  # 假设这个函数接受一个文件对象，并返回识别结果
+        print(f'audio_url = {audio_url}\naudio_file_path = {audio_file_path}\n,asr result = {result}')
+        return R.ok(data={'audio_url':audio_url,'asr_result':result})
+

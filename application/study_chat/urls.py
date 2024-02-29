@@ -14,6 +14,7 @@ urlpatterns = [
 
     # 小业务的处理
     path('ocr_request', views.OCRView.as_view()),
+    path('asr_request', views.ASRView.as_view()),
 
 
 ]

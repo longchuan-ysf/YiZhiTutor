@@ -35,8 +35,12 @@ function setRecordFontSize(){
 
     var recordContainer_H = document.querySelector('.record-container').offsetHeight;
      var recordButton = document.querySelector('.record-button');
+     var cancelButton = document.querySelector('.cancel-button');
      recordButton.style.height = (recordContainer_H * 0.8) + 'px';
      recordButton.style.width = (recordContainer_H * 0.8) + 'px';
+     recordButton.style.fontSize = (recordContainer_H * 0.5) + 'px';
+     cancelButton.style.fontSize = (recordContainer_H * 0.25) + 'px';
+
 }
 function setThematicFontSize() {
     // 计算并设置头部字体大小
@@ -505,4 +509,86 @@ function restoreOriginalLayout() {
         console.error('Element not found');
     }
 }
+
+
+let mediaRecorder;
+let audioChunks = [];
+
+function initMediaRecorder() {
+    console.log("Initializing MediaRecorder...");
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+            console.log("Media stream obtained.");
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.ondataavailable = event => {
+                console.log("Data available from MediaRecorder.");
+                audioChunks.push(event.data);
+            };
+            mediaRecorder.onstop = () => {
+                console.log("MediaRecorder stopped.");
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                const formData = new FormData();
+                formData.append("audio_file", audioBlob, "recording.wav");
+                console.log("Sending audio data to server...");
+                fetch("/chat/asr_request", { method: "POST", body: formData })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Server response received:", data);
+                      
+                    })
+                    .catch(error => console.error("Error sending audio data:", error));
+                audioChunks = [];
+            };
+
+            // Event listeners can be safely set up now
+            console.log("Setting up event listeners for recording...");
+            setupEventListeners();
+        })
+        .catch(error => {
+            console.error("Error accessing media devices:", error);
+        });
+}
+
+function setupEventListeners() {
+    const recordButton = document.getElementById('record-button');
+    if (!recordButton) {
+        console.error("Record button not found in the DOM.");
+        return;
+    }
+
+    console.log("Event listeners attached to record button.");
+    recordButton.addEventListener('mousedown', startRecording);
+    recordButton.addEventListener('mouseup', stopRecording);
+    recordButton.addEventListener('touchstart', startRecording); // Adding support for touch screens
+    recordButton.addEventListener('touchend', stopRecording);
+}
+
+function startRecording() {
+    console.log("Attempt to start recording...");
+    if (mediaRecorder && mediaRecorder.state === "inactive") {
+        audioChunks = [];
+        mediaRecorder.start();
+        console.log("Recording started.");
+    } else {
+        console.error("MediaRecorder not ready or already recording.");
+    }
+}
+
+function stopRecording() {
+    console.log("Attempt to stop recording...");
+    if (mediaRecorder && mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+        console.log("Recording stopped.");
+    } else {
+        console.error("MediaRecorder not recording.");
+    }
+}
+
+// Initialize MediaRecorder after the page has fully loaded
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("DOM fully loaded and parsed.");
+    initMediaRecorder();
+});
+
+
 
