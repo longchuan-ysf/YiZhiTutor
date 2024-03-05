@@ -109,7 +109,10 @@ class ASRView(PermissionRequired, View):
     def post(self, request):
         audio_file = request.FILES['audio_file']
         audio_url, audio_file_path = asr.saveAudio(audio_file)
+        # 为了不每次都去录音默认使用固定的音频 "E:\3school\GraduationDesign\software\uploads\temp\20240229\20240229145717_8866_converted.wav"
+
         result = asr.asr_request(audio_file_path)  # 假设这个函数接受一个文件对象，并返回识别结果
+        # result = asr.asr_request(r"E:\3school\GraduationDesign\software\uploads\temp\20240229\20240229145717_8866_converted.wav")
         print(f'audio_url = {audio_url}\naudio_file_path = {audio_file_path}\n,asr result = {result}')
         return R.ok(data={'audio_url':audio_url,'asr_result':result})
 

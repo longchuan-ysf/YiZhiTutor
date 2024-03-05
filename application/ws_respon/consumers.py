@@ -13,26 +13,36 @@ class MyConsumer(AsyncWebsocketConsumer):
         from application.ws_respon import GPT_generate, imageHandle
 
         try:
-            # 解析请求体中的 JSON 数据
+            # 解析请求体中的 JSON 数据 打印分割线,好知道这部分的打印是从哪开始的
+            print("---------------------")
             data = json.loads(text_data)
+            print(f"data = {data}")
+
+            # 提取数据
             message_text = data.get('chat-text')
             session_id = data.get('session_id')
             user_id = data.get('user_id')
             image_url = data.get('image_url')
+            audio_url = data.get("audio_url")
+
+            # 初始化变量
             media_url = ''
-            format_image = message_text
+            formatted_message = message_text
             media_type = 0
-            if image_url:
-                media_url = imageHandle.save_chat_image(image_url, "image")
-                format_image = f"[这是一张照片url放在{media_url}]{message_text}"
-                media_type = 2
 
+            # 处理媒体上传和消息格式化
+            if image_url or audio_url:
+                media_kind = "image" if image_url else "audio"
+                media_url = imageHandle.save_chat_image(image_url or audio_url, media_kind)
+                media_prefix = "[这是一张照片" if media_kind == "image" else "[这是一段语音"
+                formatted_message = f"{media_prefix}url放在{media_url}]{message_text}"
+                media_type = 2 if media_kind == "image" else 1
 
-            # print(f'message_text={message_text}\n'
-            #       f'format_image={format_image}\n'
-            #       f'media_type = {media_type}   media_url = {media_url}\n')
-            # ----------------------保存用户问题------------------------------------
-            # 使用 sync_to_async 包装同步的 ORM 调用
+            print(f'message_text={message_text}\n'
+                  f'formatted_message={formatted_message}\n'
+                  f'media_type={media_type}   media_url={media_url}\n')
+
+            # 保存用户问题
             session = await sync_to_async(ChatSession.objects.get)(id=session_id)
             userInfo = await sync_to_async(User.objects.filter(is_delete=False, id=user_id).first)()
 
@@ -40,19 +50,21 @@ class MyConsumer(AsyncWebsocketConsumer):
             new_message = await sync_to_async(ChatMessage.objects.create)(
                 session=session,
                 sender=userInfo.realname,
-                message_text=format_image,
+                message_text=formatted_message,
             )
-            if image_url:
+
+            # 如果有媒体文件，则创建媒体记录
+            if media_url:
                 new_media_record = await sync_to_async(MediaRecord.objects.create)(
-                    media_type=2,
+                    media_type=media_type,
                     media_url=media_url,
                     message=new_message,
                 )
+
             response_data = {
                 "code": 0,
                 "msg": "save confirmation",
                 "response_type": "json",
-                # 以历史信息的格式响应。参见 get_chat_messages_as_json
                 "data": {
                     "session_id": session_id,
                     'message_text': message_text,

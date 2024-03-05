@@ -23,7 +23,7 @@ function adjustLayout() {
 
 
     //------------------------录音区大小动态 -----------------------------------//
-     setRecordFontSize();
+    setRecordFontSize();
 
     //------------------------主题窗口的大小调整 -----------------------------------//
     // 动态设置主题栏的字体大小
@@ -31,17 +31,19 @@ function adjustLayout() {
 
 
 }
-function setRecordFontSize(){
+
+function setRecordFontSize() {
 
     var recordContainer_H = document.querySelector('.record-container').offsetHeight;
-     var recordButton = document.querySelector('.record-button');
-     var cancelButton = document.querySelector('.cancel-button');
-     recordButton.style.height = (recordContainer_H * 0.8) + 'px';
-     recordButton.style.width = (recordContainer_H * 0.8) + 'px';
-     recordButton.style.fontSize = (recordContainer_H * 0.5) + 'px';
-     cancelButton.style.fontSize = (recordContainer_H * 0.25) + 'px';
+    var recordButton = document.querySelector('.record-button');
+    var cancelButton = document.querySelector('.cancel-button');
+    recordButton.style.height = (recordContainer_H * 0.8) + 'px';
+    recordButton.style.width = (recordContainer_H * 0.8) + 'px';
+    recordButton.style.fontSize = (recordContainer_H * 0.5) + 'px';
+    cancelButton.style.fontSize = (recordContainer_H * 0.25) + 'px';
 
 }
+
 function setThematicFontSize() {
     // 计算并设置头部字体大小
     var thematicHeader = document.querySelector('.chat-thematic-header');
@@ -376,6 +378,7 @@ function finalizeAIBubble(bubble) {
 }
 
 var imageUrl = ''; // 初始化图片URL变量
+var audioUrl = ''; // 初始化图片URL变量
 // 定义关闭图片预览的函数
 function closeImagePreview() {
     console.log("closeImagePreview");
@@ -468,9 +471,10 @@ layui.use(["form", "croppers"], function () {
             'chat-text': document.getElementById('chat-text').value,
             'session_id': currentSessionId,
             'user_id': userID,
-            'image_url': imageUrl
+            'image_url': imageUrl,
+            'audio_url': audioUrl
         };
-
+        console.log('send :',messageData)
         //websocket发送请求
         socket.send(JSON.stringify(messageData));
         document.getElementById('chat-text').value = '';
@@ -511,12 +515,47 @@ function restoreOriginalLayout() {
 }
 
 
+function displayASRResult(result) {
+    var recordingSection = document.getElementById('recording-section');
+    var resultSection = document.getElementById('result-section');
+    var asrResultTextarea = resultSection.querySelector('#asr-result'); // 或者使用.querySelector('.asr-result')，如果您是通过类来选择
+
+    // 隐藏录音区域
+    recordingSection.style.display = 'none';
+
+    // 清空record-container中可能存在的元素
+    resultSection.style.display = 'flex';
+    asrResultTextarea.value = result;
+}
+function onClickClearButton(clearAudioUrl = false){
+   var asrResultTextarea = document.getElementById('asr-result');
+   var resultSection = document.getElementById('result-section');
+   var recordingsection = document.getElementById('recording-section');
+   asrResultTextarea.value='';
+   if(clearAudioUrl && audioUrl){
+        audioUrl = '';
+   }
+
+   resultSection.style.display = 'none';
+   recordingsection.style.display = 'block'
+}
+
+function onClickOkButton(){
+    var asrResultTextarea = document.getElementById('asr-result');
+    var textArea = document.getElementById('chat-text'); // 获取textarea
+    var asr_result = asrResultTextarea.value;
+    //首先还原录音布局
+    onClickClearButton(false)
+    //接着还原数据提交布局
+    restoreOriginalLayout()
+    textArea.value = asr_result
+}
 let mediaRecorder;
 let audioChunks = [];
 
 function initMediaRecorder() {
     console.log("Initializing MediaRecorder...");
-    navigator.mediaDevices.getUserMedia({ audio: true })
+    navigator.mediaDevices.getUserMedia({audio: true})
         .then(stream => {
             console.log("Media stream obtained.");
             mediaRecorder = new MediaRecorder(stream);
@@ -526,17 +565,30 @@ function initMediaRecorder() {
             };
             mediaRecorder.onstop = () => {
                 console.log("MediaRecorder stopped.");
-                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                const audioBlob = new Blob(audioChunks, {type: 'audio/wav'});
                 const formData = new FormData();
                 formData.append("audio_file", audioBlob, "recording.wav");
+                // 显示加载层
+                var index = layui.layer.load(1, { // 1是风格参数，表示不同的加载样式，可以根据需求选择；{shade: [0.5, '#fff']}可以调整遮罩层的颜色和透明度
+                    shade: [0.5, '#fff'] // 0.5透明度的白色背景
+                });
+
                 console.log("Sending audio data to server...");
-                fetch("/chat/asr_request", { method: "POST", body: formData })
+
+                fetch("/chat/asr_request", {method: "POST", body: formData})
                     .then(response => response.json())
                     .then(data => {
                         console.log("Server response received:", data);
-                      
+                        layui.layer.close(index);
+                        displayASRResult(data.data.asr_result.result); // 显示ASR结果\
+                        audioUrl = data.data.audio_url;
                     })
-                    .catch(error => console.error("Error sending audio data:", error));
+                    .catch(error => {
+                        console.error("Error sending audio data:", error);
+
+                        // 发生错误也要关闭加载层
+                        layui.layer.close(index);
+                    });
                 audioChunks = [];
             };
 

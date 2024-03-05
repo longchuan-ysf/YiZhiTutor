@@ -39,8 +39,27 @@
                 </div>
             </div>
             <div class="record-container" id="record-container">
-                <button type="button" class="record-button layui-icon layui-icon-mike" id="record-button"></button>
-                <button type="button" class="cancel-button layui-icon layui-icon-down" onclick="restoreOriginalLayout()"></button>
+                <!-- 录音功能区 -->
+                <div class="recording-section" id = "recording-section" >
+                    <button type="button" class="record-button layui-icon layui-icon-mike" id="record-button"></button>
+                    <!-- cancel-button的定位是根据 -->
+                    <button type="button" class="cancel-button layui-icon layui-icon-down"
+                            onclick="restoreOriginalLayout()"></button>
+                </div>
+
+                <!-- 识别结果编辑区 -->
+                <div class="result-section" id="result-section">
+                    <textarea id="asr-result" class="asr-result"></textarea>
+                    <div class="control-buttons"> <!-- 新增的按钮容器 -->
+                        <button type="button" class="control-button clear-button layui-icon layui-icon-refresh"
+                                id="clear-button" onclick="onClickClearButton(true)">重录
+                        </button>
+                        <button type="button" class="control-button ok-button layui-icon layui-icon-ok" id="ok-button" onclick="onClickOkButton()">
+                            确认
+                        </button>
+                    </div>
+                </div>
+
             </div>
         </div>
     </form>

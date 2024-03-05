@@ -190,4 +190,53 @@
 
 
 
+.result-section {
+    display: none; /* 设置为flex布局 */
+    width: 100%; /* 占满父容器的宽度 */
+    height: 100%; /* 可根据需要调整 */
+}
+
+.recording-section{
+
+
+}
+.asr-result {
+    width: 75%;
+    height: 88%; /* 调整高度，确保不会占满整个容器 */
+    margin: 3px; /* 添加外边距，让文本区不紧贴容器边缘 */
+    padding: 2px; /* 内边距，增加输入空间 */
+    border: 1px solid #ccc; /* 添加边框，增加可见性 */
+    border-radius: 5px; /* 轻微的圆角 */
+    background-color: #f8f8f8; /* 淡色背景 */
+    resize: none; /* 禁止调整大小 */
+    overflow-y: auto; /* 超出时允许垂直滚动 */
+}
+
+.control-buttons {
+    display: flex; /* 设置为flex布局 */
+    flex-direction: column; /* 子元素竖向排列 */
+    justify-content: space-around; /* 在主轴方向上平均分布 */
+    width: 25%;
+    align-items: center; /* 在交叉轴上居中对齐子元素 */
+    /*gap: 2px;*/
+}
+
+.control-button {
+    width: 70%;
+    padding: 7px 0;
+    background-color: transparent; /* 移除背景色 */
+    color: #4DD0E1; /* 设置文字和图标的颜色 */
+    border-radius: 10%; /* 维持圆角 */
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.control-button:hover {
+    color: #3c9; /* 悬停时改变文字和图标颜色 */
+    background-color: rgba(0,0,0,0.1); /* 悬停时轻微显示背景，增加交互感 */
+}
+
+
+
+
 
